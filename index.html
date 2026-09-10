@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AITO问界M6 情绪内容分析报告</title>
+<style>
+* { margin:0;padding:0;box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0d1117;color:#e8e6e3;line-height:1.7;letter-spacing:0.01em; }
+.container { max-width:1400px;margin:0 auto;padding:24px; }
+.header { background:#161b22;border-radius:16px;padding:28px 36px;margin-bottom:20px;border:1px solid #21262d; }
+.header h1 { font-size:22px;color:#e8e6e3;margin-bottom:10px;font-weight:500; }
+.header .meta { display:flex;gap:28px;font-size:12px;color:#8a8a8a; }
+.header .meta span { opacity:0.7; }
+.header .summary { margin-top:14px;padding:12px 18px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:13px;color:#e8e6e3;border-left:2px solid #f5854a;line-height:1.8;opacity:0.8; }
+.tabs { display:flex;margin-bottom:24px;background:#161b22;border-radius:10px;overflow:hidden;border:1px solid #21262d; }
+.tab-btn { padding:14px 24px;cursor:pointer;border:none;background:transparent;color:#8a8a8a;font-size:13px;font-weight:500;transition:all 0.2s;flex:1;text-align:center;letter-spacing:0.5px; }
+.tab-btn:hover { background:rgba(255,255,255,0.03); }
+.tab-btn.active { background:#f5854a;color:#0d1117;font-weight:600; }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+.card { background:#161b22;border-radius:14px;padding:24px 28px;margin-bottom:18px;border:1px solid #21262d; }
+.card-title { font-size:15px;font-weight:500;color:#e8e6e3;margin-bottom:18px;display:flex;align-items:center;gap:10px; }
+.analysis { background:rgba(212,165,116,0.06);border:1px solid rgba(212,165,116,0.15);border-radius:10px;padding:16px 20px;margin-bottom:18px; }
+.analysis-title { font-size:12px;color:#f5854a;font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;opacity:0.9; }
+.analysis ul { list-style:none;padding:0; }
+.analysis li { font-size:13px;color:#e8e6e3;margin-bottom:5px;padding-left:14px;position:relative;opacity:0.8; }
+.analysis li::before { content:"·";position:absolute;left:0;color:#f5854a;font-weight:bold; }
+table { width:100%;border-collapse:collapse;font-size:13px;margin:10px 0; }
+th { text-align:left;padding:10px 14px;color:#8a8a8a;font-weight:500;border-bottom:1px solid #21262d;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.7; }
+td { padding:10px 14px;border-bottom:1px solid #1c2128;color:#e8e6e3;opacity:0.8; }
+tr:hover td { background:rgba(255,255,255,0.02); }
+.tag { display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500; }
+.tag-gold { background:#f5854a1a;color:#f5854a; }
+.chart { width:100%;height:320px;margin:14px 0; }
+.chart-sm { width:100%;height:260px; }
+.charts-row { display:grid;grid-template-columns:1fr 1fr;gap:18px; }
+.strategy-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
+.summary-box { background:linear-gradient(135deg,#f5854a1a 0%,rgba(212,165,116,0.03) 100%);border:1px solid #f5854a4d;border-radius:12px;padding:20px 24px;font-size:13px;line-height:1.8; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>📊 AITO问界M6 情绪内容分析报告</h1>
+    <div class="meta">
+      <span>📅 数据周期: 2026年5月 - 7月</span>
+      <span>📋 总笔记: 1,594 篇</span>
+      <span>📈 总阅读: 367 万</span>
+      <span>📊 均阅读: 2,303</span>
+    </div>
+    <div class="summary">AITO问界M6在2026年5月 - 7月的1,594篇有效笔记中（清理68篇明确涉及其他车型但未提M6的误入笔记），67%为积极情绪，以欣赏感（38.8%）和期待感（26.1%）为主导，积极占比明显高于M7的53%。消极情绪占28%，最大来源是购车决策焦虑（占消极侧41%，高于M7的28%），涉及问界家族内部M6/M7选择和与理想L6/理想i6的跨品牌对比。高传播负面笔记《销售未提前说明轮毂与续航关联》（2.2万阅读）反映真实的销售端信息透明度问题，非产品质量问题。⚠️ 提醒：部分细分情绪结论样本极小，解读需谨慎。</div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">情绪全景</button>
+    <button class="tab-btn" onclick="switchTab(1)">正向放大</button>
+    <button class="tab-btn" onclick="switchTab(2)">负向扭转</button>
+    <button class="tab-btn" onclick="switchTab(3)">策略建议</button>
+  </div>
+
+<div class="tab-content active" id="tab0">
+  <div class="card">
+    <div class="card-title"><span class="icon">◆</span> 效价分布总览</div>
+    <div class="analysis">
+      <div class="analysis-title">关键洞察</div>
+      <ul>
+        <li>积极情绪占比66.9%（1,066篇/234万阅读），消极27.9%（444篇/112万阅读），中性5.3%——<b style="color:#f5854a">积极占比明显高于M7(53%)</b>，M6作为家族里相对新的车型，用户讨论口碑基调整体更正向</li>
+        <li>样本规模提醒：本报告有效分析基数1,594篇已是清理后的真实数据，但部分细分情绪样本仍偏小（如钦佩感14篇、骄傲4篇），解读时需留意样本量标注</li>
+        <li>成就感情绪原始效率1.96x，用"阅读量÷绑定SPU数"降权后升至2.58x（TOP1"新车"单篇4.9万阅读为单SPU纯净内容，情绪关键词"如期所愿"实为提车如愿叙事，已归入"交付/购车"主题）——已在词云和深度模块中应用此降权处理</li>
+      </ul>
+    </div>
+    <div style="display:flex;gap:14px;margin-bottom:0;">
+      
+      <div style="flex:1;background:rgba(255,255,255,0.02);border-radius:10px;padding:16px 18px;border-left:2px solid #f5854a;min-width:0;">
+        <div style="font-size:13px;font-weight:600;color:#f5854a;margin-bottom:10px;">积极</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">笔记数</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:100.0%;height:100%;background:#f5854a;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">1,066</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">笔记占比</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:66.9%;height:100%;background:#ffd166;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">66.9%</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">总阅读量</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:63.8%;height:100%;background:#7ec8e8;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">234万</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">阅读占比</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:63.8%;height:100%;background:#06d6a0;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">63.8%</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">单篇均阅读</span><div style="flex:1;"></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">2,197</span></div>
+      </div>
+      
+      <div style="flex:1;background:rgba(255,255,255,0.02);border-radius:10px;padding:16px 18px;border-left:2px solid #e86550;min-width:0;">
+        <div style="font-size:13px;font-weight:600;color:#e86550;margin-bottom:10px;">消极</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">笔记数</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:41.7%;height:100%;background:#f5854a;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">444</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">笔记占比</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:27.9%;height:100%;background:#ffd166;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">27.9%</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">总阅读量</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:30.6%;height:100%;background:#7ec8e8;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">112万</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">阅读占比</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:30.6%;height:100%;background:#06d6a0;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">30.6%</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">单篇均阅读</span><div style="flex:1;"></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">2,532</span></div>
+      </div>
+      
+      <div style="flex:1;background:rgba(255,255,255,0.02);border-radius:10px;padding:16px 18px;border-left:2px solid #8a8a8a;min-width:0;">
+        <div style="font-size:13px;font-weight:600;color:#8a8a8a;margin-bottom:10px;">中性</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">笔记数</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:7.9%;height:100%;background:#f5854a;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">84</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">笔记占比</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:5.3%;height:100%;background:#ffd166;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">5.3%</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">总阅读量</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:5.6%;height:100%;background:#7ec8e8;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">20万</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">阅读占比</span><div style="flex:1;"><div style="background:rgba(255,255,255,0.04);border-radius:2px;height:4px;overflow:hidden;"><div style="width:5.6%;height:100%;background:#06d6a0;border-radius:2px;"></div></div></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">5.6%</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="font-size:11px;color:#8a8a8a;white-space:nowrap;min-width:56px;opacity:0.7;">单篇均阅读</span><div style="flex:1;"></div><span style="font-size:11px;color:#e8e6e3;font-weight:500;white-space:nowrap;min-width:42px;text-align:right;opacity:0.8;">2,439</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="icon">◆</span> 细分情绪全景</div>
+    <div class="analysis">
+      <div class="analysis-title">关键洞察</div>
+      <ul>
+        <li>「欣赏感」38.8%、「期待感」26.1%是积极侧两大基本盘（合计近七成），远超其他情绪，M6的口碑讨论高度集中在这两类</li>
+        <li>「成就感」19篇虽体量小，但降权后效率2.58x是明星情绪，真实案例集中在"提车/交付里程碑""销量突破10万台"等真实成就叙事</li>
+        <li>消极侧「纠结感」占比40.3%（179篇），是消极侧最大单一情绪且占比集中度高于M7（29%），真实案例既有"四款车的选择"这类多车对比，也有"M6与M7两款车型的对比决策"家族内部选择</li>
+        <li>「担心感」72篇（16.2%）在消极侧排名第二，效率1.29x（降权后）高于均值，值得关注具体担心点</li>
+      </ul>
+    </div>
+    <div class="charts-row">
+      <div id="chart-sub-pos" class="chart-sm"></div>
+      <div id="chart-sub-neg" class="chart-sm"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="icon">◆</span> 情绪效率排行</div>
+    <div class="analysis">
+      <div class="analysis-title">关键洞察</div>
+      <ul>
+        <li>🟠 <b>积极·高效区</b>：「成就感」19篇降权效率2.58x、「愉悦」5篇降权效率3.51x——前者以"提车/交付成就"为核心内容方向，后者以"配色/座舱设计"为核心内容方向</li>
+        <li>⚠️ <b>需要警惕的伪高效信号</b>：「接纳感」13篇原始效率3.60x、「信念感」4篇原始效率4.36x——经核查TOP1笔记分别绑定7个和11个SPU，是多车横评内容而非M6专属，<b style="color:#e86550">降权后效率分别降至1.46x和1.75x</b>，不适合作为明星/高潜情绪</li>
+        <li>🔴 <b>消极·主力区</b>：「纠结感」179篇体量最大，降权效率0.99x接近均值</li>
+        <li>🔴 <b>消极·高传播</b>：「遗憾」31篇降权效率2.21x，TOP案例"问界M6的购买决定"（3.4万阅读）和"销售未提前说明轮毂与续航关联"（2.2万阅读）反映真实的购车后信息差问题</li>
+      </ul>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:16px;margin-bottom:8px;font-size:11px;">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f5854a;margin-right:4px;vertical-align:middle;"></span>积极情绪</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e86550;margin-right:4px;vertical-align:middle;"></span>消极情绪</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#8a8a8a;margin-right:4px;vertical-align:middle;"></span>中性情绪</span>
+    </div>
+    <div id="chart-efficiency" class="chart"></div>
+  </div>
+</div>
+
+<div class="tab-content" id="tab1">
+  <div class="card">
+    <div class="card-title"><span class="icon">◆</span> 积极标的词 · 词云 + 分类聚合</div>
+    <div style="background:#f5854a1a;border-left:3px solid #f5854a;padding:14px 16px;border-radius:0 6px 6px 0;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;color:#f5854a;margin-bottom:6px;">分类洞察</div>
+      <ul style="margin:0;padding-left:18px;font-size:13px;color:#e8e6e3;opacity:0.85;">
+        <li>「智能驾驶」26篇效率2.62x和「驾控/性能」24篇效率2.52x是积极侧最高效两个方向，但样本量都偏小需谨慎解读</li>
+        <li>「空间/内饰」125篇效率1.42x是样本适中且效率较高的方向，手办展示柜/220V插座等M6特色配置反馈良好</li>
+        <li>「价格/权益」83篇效率仅0.43x是积极侧最低，说明价格类正向内容传播力普遍不足（这与消极侧价格类反而效率0.95x接近均值形成对比）</li>
+        <li>「外观/颜值」231篇是积极侧笔记量最大类别但效率仅0.85x接近均值，多彩配色是话题量的主要来源但不是效率驱动力</li>
+      </ul>
+    </div>
+    <div style="display:grid;grid-template-columns:55% 45%;gap:16px;align-items:stretch;margin-bottom:20px;">
+      <div style="height:100%;">
+    <div id="wc_pos_container" style="background:#161b22;border:1px solid #21262d;border-radius:8px;padding:16px;overflow:hidden;display:flex;flex-direction:column;height:100%;min-height:420px;box-sizing:border-box;">
+      <div style="font-size:13px;color:#8a8a8a;margin-bottom:8px;">TOP 情绪标的词（字号已按绑定SPU数降权，减少多车横评笔记的视觉失真）</div>
+      <div style="font-size:10px;color:#8a8a8a;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#06d6a0;margin-right:3px;vertical-align:middle;"></span>智能驾驶 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#ffd166;margin-right:3px;vertical-align:middle;"></span>空间/内饰 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#8ecae6;margin-right:3px;vertical-align:middle;"></span>品牌/车型资讯 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#f5854a;margin-right:3px;vertical-align:middle;"></span>品牌/车型泛提及 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#c77dff;margin-right:3px;vertical-align:middle;"></span>外观/颜值 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#ef476f;margin-right:3px;vertical-align:middle;"></span>驾控/性能 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#f4a261;margin-right:3px;vertical-align:middle;"></span>交付/购车 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#7ec8e8;margin-right:3px;vertical-align:middle;"></span>智能座舱 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#a8dadc;margin-right:3px;vertical-align:middle;"></span>价格/权益 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#8ecae6;margin-right:3px;vertical-align:middle;"></span>生活方式/家庭场景 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#e9c46a;margin-right:3px;vertical-align:middle;"></span>竞品提及(正向)</div>
+      <div style="flex:1;position:relative;min-height:0;" id="wc_pos_wrap">
+        <canvas id="wc_pos" style="width:100%;height:100%;display:block;"></canvas>
+        <div id="wc_pos_tooltip" style="display:none;position:absolute;background:#2d333b;border:1px solid #444;border-radius:6px;padding:8px 12px;font-size:12px;color:#e8e6e3;pointer-events:none;z-index:100;white-space:nowrap;"></div>
+      </div>
+      <div style="margin-top:10px;padding-top:8px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;opacity:0.7;">
+        * 情绪标的词：平台情绪模型识别出的、能触发用户特定情绪反应的内容主题单元。<b>字号按"阅读量÷该笔记绑定SPU数"排序</b>——多车横评笔记（如同时绑定5个车型）的视觉权重会相应降低。悬浮查看真实阅读量与降权后数值对比。
+      </div>
+    </div>
+    <script>
+    (function(){
+      const data = [{"text": "车辆的银色淡蓝色外观、智驾功能", "size": 41, "color": "#06d6a0", "notes": 1, "reads": 51640, "weighted_reads": 51640, "category": "智能驾驶"}, {"text": "问界M6的静态设计（手办展示柜、220V", "size": 40, "color": "#ffd166", "notes": 1, "reads": 101643, "weighted_reads": 50822, "category": "空间/内饰"}, {"text": "新车", "size": 40, "color": "#8ecae6", "notes": 3, "reads": 50610, "weighted_reads": 50610, "category": "品牌/车型资讯"}, {"text": "问界M6汽车", "size": 34, "color": "#f5854a", "notes": 17, "reads": 74244, "weighted_reads": 41227, "category": "品牌/车型泛提及"}, {"text": "问界M6新锐王牌的创新功能与设计", "size": 32, "color": "#c77dff", "notes": 1, "reads": 37044, "weighted_reads": 37044, "category": "外观/颜值"}, {"text": "M6汽车的紫白色内饰及配置", "size": 29, "color": "#ffd166", "notes": 1, "reads": 32136, "weighted_reads": 32136, "category": "空间/内饰"}, {"text": "小6轮毂的交付及小8的升级服务", "size": 27, "color": "#ef476f", "notes": 1, "reads": 29747, "weighted_reads": 29747, "category": "驾控/性能"}, {"text": "问界M6的综合性能", "size": 23, "color": "#f5854a", "notes": 1, "reads": 21905, "weighted_reads": 21905, "category": "品牌/车型泛提及"}, {"text": "问界M6车型的创新设计与智能化配置", "size": 21, "color": "#c77dff", "notes": 1, "reads": 18471, "weighted_reads": 18471, "category": "外观/颜值"}, {"text": "问界M6新增纯电版本的定价策略", "size": 19, "color": "#ef476f", "notes": 1, "reads": 16317, "weighted_reads": 16317, "category": "驾控/性能"}, {"text": "车辆的运动感外观设计及促销福利", "size": 19, "color": "#c77dff", "notes": 1, "reads": 15441, "weighted_reads": 15441, "category": "外观/颜值"}, {"text": "外黑内红的“黑武士”车型及交付仪式", "size": 18, "color": "#f4a261", "notes": 1, "reads": 14661, "weighted_reads": 14661, "category": "交付/购车"}, {"text": "问界M6", "size": 18, "color": "#f5854a", "notes": 15, "reads": 23089, "weighted_reads": 13804, "category": "品牌/车型泛提及"}, {"text": "青色外饰+杏色内饰的汽车配色方案", "size": 18, "color": "#ffd166", "notes": 1, "reads": 13493, "weighted_reads": 13493, "category": "空间/内饰"}, {"text": "问界M6的综合表现", "size": 17, "color": "#f5854a", "notes": 1, "reads": 91738, "weighted_reads": 13105, "category": "品牌/车型泛提及"}, {"text": "问界M6的内饰与技术配置", "size": 17, "color": "#ffd166", "notes": 1, "reads": 24922, "weighted_reads": 12461, "category": "空间/内饰"}, {"text": "问界M6新增纯电入门版本的定价策略", "size": 17, "color": "#ef476f", "notes": 1, "reads": 47090, "weighted_reads": 11772, "category": "驾控/性能"}, {"text": "问界M6纯电版的创新设计（手势控制前备箱", "size": 17, "color": "#06d6a0", "notes": 1, "reads": 11702, "weighted_reads": 11702, "category": "智能驾驶"}, {"text": "问界M6与卡宴设计趋同的市场策略", "size": 16, "color": "#c77dff", "notes": 1, "reads": 11464, "weighted_reads": 11464, "category": "外观/颜值"}, {"text": "问界M6的颜值、智驾系统、空间设计", "size": 16, "color": "#06d6a0", "notes": 1, "reads": 22654, "weighted_reads": 11327, "category": "智能驾驶"}, {"text": "小柜子及其功能", "size": 16, "color": "#ffd166", "notes": 1, "reads": 11182, "weighted_reads": 11182, "category": "空间/内饰"}, {"text": "赛力斯新能源业务转型成果", "size": 16, "color": "#8ecae6", "notes": 1, "reads": 21570, "weighted_reads": 10785, "category": "品牌/车型资讯"}, {"text": "问界M6四款内饰设计", "size": 16, "color": "#ffd166", "notes": 2, "reads": 10775, "weighted_reads": 10775, "category": "空间/内饰"}, {"text": "问界M6的设计与功能", "size": 16, "color": "#c77dff", "notes": 1, "reads": 10718, "weighted_reads": 10718, "category": "外观/颜值"}, {"text": "钛空银实车的外观与性能", "size": 16, "color": "#c77dff", "notes": 1, "reads": 20722, "weighted_reads": 10361, "category": "外观/颜值"}, {"text": "问界M6/M7/M8三款车型及其功能特点", "size": 16, "color": "#f5854a", "notes": 1, "reads": 31025, "weighted_reads": 10342, "category": "品牌/车型泛提及"}, {"text": "莫兰迪紫撞白的汽车设计、软质包覆+精致缝", "size": 16, "color": "#7ec8e8", "notes": 1, "reads": 10258, "weighted_reads": 10258, "category": "智能座舱"}, {"text": "问界M6展车（EV纯电版）的外形设计、座", "size": 15, "color": "#ffd166", "notes": 1, "reads": 29931, "weighted_reads": 9977, "category": "空间/内饰"}, {"text": "提车事件", "size": 15, "color": "#f4a261", "notes": 1, "reads": 9502, "weighted_reads": 9502, "category": "交付/购车"}, {"text": "问界M6的性能和设计", "size": 15, "color": "#c77dff", "notes": 1, "reads": 9464, "weighted_reads": 9464, "category": "外观/颜值"}, {"text": "7种颜色的物品（如汽车/产品）", "size": 15, "color": "#c77dff", "notes": 1, "reads": 9025, "weighted_reads": 9025, "category": "外观/颜值"}, {"text": "银色实车", "size": 15, "color": "#c77dff", "notes": 1, "reads": 8942, "weighted_reads": 8942, "category": "外观/颜值"}, {"text": "问界M6的外观设计、配置细节及实用性", "size": 15, "color": "#c77dff", "notes": 1, "reads": 8487, "weighted_reads": 8487, "category": "外观/颜值"}, {"text": "问界M6 SUV", "size": 14, "color": "#f5854a", "notes": 5, "reads": 8175, "weighted_reads": 8018, "category": "品牌/车型泛提及"}, {"text": "问界M6「钛空银」配色", "size": 14, "color": "#c77dff", "notes": 1, "reads": 7880, "weighted_reads": 7880, "category": "外观/颜值"}, {"text": "问界M6车型的加入", "size": 14, "color": "#f5854a", "notes": 1, "reads": 7802, "weighted_reads": 7802, "category": "品牌/车型泛提及"}, {"text": "问界M6车型", "size": 14, "color": "#f5854a", "notes": 7, "reads": 18307, "weighted_reads": 7787, "category": "品牌/车型泛提及"}, {"text": "问界M6的内饰设计", "size": 14, "color": "#ffd166", "notes": 10, "reads": 13297, "weighted_reads": 7637, "category": "空间/内饰"}, {"text": "全新理想L9、问界M6、小米YU7GT、", "size": 14, "color": "#8ecae6", "notes": 1, "reads": 29997, "weighted_reads": 7499, "category": "品牌/车型资讯"}, {"text": "问界M6 SUV及其技术配置", "size": 14, "color": "#f5854a", "notes": 1, "reads": 7475, "weighted_reads": 7475, "category": "品牌/车型泛提及"}, {"text": "问界M6的配置与性能", "size": 14, "color": "#f5854a", "notes": 1, "reads": 41468, "weighted_reads": 6911, "category": "品牌/车型泛提及"}, {"text": "问界M6的红+黑外观与灰色麝皮绒顶内饰", "size": 14, "color": "#ffd166", "notes": 1, "reads": 6911, "weighted_reads": 6911, "category": "空间/内饰"}, {"text": "M6的“灵感橱窗”扩展坞及未来可拓展配件", "size": 14, "color": "#7ec8e8", "notes": 1, "reads": 6882, "weighted_reads": 6882, "category": "智能座舱"}, {"text": "理想i6的颜值、问界M6的智驾系统", "size": 14, "color": "#06d6a0", "notes": 1, "reads": 13376, "weighted_reads": 6688, "category": "智能驾驶"}, {"text": "遥控泊车功能", "size": 13, "color": "#06d6a0", "notes": 1, "reads": 6645, "weighted_reads": 6645, "category": "智能驾驶"}, {"text": "韶华杏色调的座舱设计", "size": 13, "color": "#7ec8e8", "notes": 1, "reads": 6548, "weighted_reads": 6548, "category": "智能座舱"}, {"text": "问界 M6 车型及产品矩阵", "size": 13, "color": "#f5854a", "notes": 1, "reads": 31063, "weighted_reads": 6213, "category": "品牌/车型泛提及"}, {"text": "M6使用教程", "size": 13, "color": "#f5854a", "notes": 1, "reads": 6170, "weighted_reads": 6170, "category": "品牌/车型泛提及"}, {"text": "鸿蒙智行4月及1-4月销售数据、新车发布", "size": 13, "color": "#7ec8e8", "notes": 1, "reads": 17953, "weighted_reads": 5984, "category": "智能座舱"}, {"text": "问界M6的提车仪式", "size": 13, "color": "#f4a261", "notes": 1, "reads": 5772, "weighted_reads": 5772, "category": "交付/购车"}, {"text": "汽车颜色与轮胎设计", "size": 13, "color": "#c77dff", "notes": 1, "reads": 5464, "weighted_reads": 5464, "category": "外观/颜值"}, {"text": "宋Ultra EV的内饰设计", "size": 13, "color": "#ffd166", "notes": 1, "reads": 10632, "weighted_reads": 5316, "category": "空间/内饰"}, {"text": "问界M6的创新设计与功能", "size": 13, "color": "#c77dff", "notes": 1, "reads": 5245, "weighted_reads": 5245, "category": "外观/颜值"}, {"text": "问界M6购车优惠及权益", "size": 13, "color": "#a8dadc", "notes": 1, "reads": 5204, "weighted_reads": 5204, "category": "价格/权益"}, {"text": "M6测试体验", "size": 13, "color": "#f5854a", "notes": 1, "reads": 10069, "weighted_reads": 5034, "category": "品牌/车型泛提及"}, {"text": "问界M6车机小艺的指令执行能力", "size": 12, "color": "#7ec8e8", "notes": 1, "reads": 4962, "weighted_reads": 4962, "category": "智能座舱"}, {"text": "问界家族五款车型的内饰设计及差异化定位", "size": 12, "color": "#ffd166", "notes": 1, "reads": 28671, "weighted_reads": 4778, "category": "空间/内饰"}, {"text": "问界M6的配置与设计", "size": 12, "color": "#c77dff", "notes": 1, "reads": 4718, "weighted_reads": 4718, "category": "外观/颜值"}, {"text": "问界M6的外观设计", "size": 12, "color": "#c77dff", "notes": 5, "reads": 8548, "weighted_reads": 4704, "category": "外观/颜值"}, {"text": "问界M6新车到店", "size": 12, "color": "#f4a261", "notes": 1, "reads": 13259, "weighted_reads": 4420, "category": "交付/购车"}, {"text": "银色", "size": 12, "color": "#c77dff", "notes": 1, "reads": 4382, "weighted_reads": 4382, "category": "外观/颜值"}, {"text": "问界M6的设计与华为技术", "size": 12, "color": "#c77dff", "notes": 1, "reads": 4355, "weighted_reads": 4355, "category": "外观/颜值"}, {"text": "家人群体", "size": 12, "color": "#8ecae6", "notes": 1, "reads": 4301, "weighted_reads": 4301, "category": "生活方式/家庭场景"}, {"text": "问界M6的后排功能设计", "size": 12, "color": "#ffd166", "notes": 1, "reads": 4198, "weighted_reads": 4198, "category": "空间/内饰"}, {"text": "流光青配紫慕白的颜色组合", "size": 12, "color": "#c77dff", "notes": 1, "reads": 4168, "weighted_reads": 4168, "category": "外观/颜值"}, {"text": "新款问界M6的紫色车款", "size": 12, "color": "#c77dff", "notes": 1, "reads": 4147, "weighted_reads": 4147, "category": "外观/颜值"}, {"text": "问界M6的灵感橱窗和磁吸功能", "size": 12, "color": "#7ec8e8", "notes": 1, "reads": 4126, "weighted_reads": 4126, "category": "智能座舱"}, {"text": "问界M6的7种车身颜色", "size": 12, "color": "#c77dff", "notes": 1, "reads": 4105, "weighted_reads": 4105, "category": "外观/颜值"}, {"text": "购车优惠信息", "size": 12, "color": "#a8dadc", "notes": 1, "reads": 4054, "weighted_reads": 4054, "category": "价格/权益"}, {"text": "问界M6的座舱设计", "size": 12, "color": "#7ec8e8", "notes": 1, "reads": 4037, "weighted_reads": 4037, "category": "智能座舱"}, {"text": "问界 M6 车型及其设计、功能、市场定位", "size": 12, "color": "#c77dff", "notes": 1, "reads": 12044, "weighted_reads": 4015, "category": "外观/颜值"}, {"text": "问届m6车型的外观设计及车主群体", "size": 12, "color": "#c77dff", "notes": 1, "reads": 3935, "weighted_reads": 3935, "category": "外观/颜值"}, {"text": "问界M6的内饰颜色", "size": 12, "color": "#ffd166", "notes": 1, "reads": 3889, "weighted_reads": 3889, "category": "空间/内饰"}, {"text": "问界M6的试驾体验", "size": 12, "color": "#f4a261", "notes": 3, "reads": 7246, "weighted_reads": 3864, "category": "交付/购车"}, {"text": "问界M6副驾空间", "size": 12, "color": "#ffd166", "notes": 1, "reads": 3603, "weighted_reads": 3603, "category": "空间/内饰"}, {"text": "问界M6 100度纯电版本", "size": 12, "color": "#ef476f", "notes": 1, "reads": 3518, "weighted_reads": 3518, "category": "驾控/性能"}, {"text": "车辆续航表现及驾驶体验", "size": 12, "color": "#ef476f", "notes": 1, "reads": 3466, "weighted_reads": 3466, "category": "驾控/性能"}, {"text": "白色车衣、车膜、360脚垫", "size": 12, "color": "#ffd166", "notes": 1, "reads": 3336, "weighted_reads": 3336, "category": "空间/内饰"}, {"text": "订单处理速度", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 3190, "weighted_reads": 3190, "category": "价格/权益"}, {"text": "问界M6的车内空间设计", "size": 11, "color": "#ffd166", "notes": 1, "reads": 3180, "weighted_reads": 3180, "category": "空间/内饰"}, {"text": "理想i6的舒适性、小米yu7的外观设计", "size": 11, "color": "#ffd166", "notes": 1, "reads": 12515, "weighted_reads": 3129, "category": "空间/内饰"}, {"text": "问界M6的外观设计及色彩搭配方案", "size": 11, "color": "#c77dff", "notes": 1, "reads": 3049, "weighted_reads": 3049, "category": "外观/颜值"}, {"text": "问界M6购车福利", "size": 11, "color": "#f5854a", "notes": 1, "reads": 5906, "weighted_reads": 2953, "category": "品牌/车型泛提及"}, {"text": "问界M6的购买与体验", "size": 11, "color": "#f5854a", "notes": 1, "reads": 2945, "weighted_reads": 2945, "category": "品牌/车型泛提及"}, {"text": "问界M9/M6的家用适配性", "size": 11, "color": "#f5854a", "notes": 1, "reads": 5777, "weighted_reads": 2888, "category": "品牌/车型泛提及"}, {"text": "问界M6曜石黑车型及其896线激光雷达、", "size": 11, "color": "#06d6a0", "notes": 1, "reads": 5700, "weighted_reads": 2850, "category": "智能驾驶"}, {"text": "床垫/气垫床的空间解决方案", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2814, "weighted_reads": 2814, "category": "空间/内饰"}, {"text": "问界汽车的隐藏功能及使用体验", "size": 11, "color": "#f5854a", "notes": 1, "reads": 5594, "weighted_reads": 2797, "category": "品牌/车型泛提及"}, {"text": "紫慕白内饰", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2743, "weighted_reads": 2743, "category": "空间/内饰"}, {"text": "华为在汽车领域的战略目标与技术方案", "size": 11, "color": "#f5854a", "notes": 1, "reads": 29784, "weighted_reads": 2708, "category": "品牌/车型泛提及"}, {"text": "保时捷Cayenne EV的设计", "size": 11, "color": "#c77dff", "notes": 1, "reads": 5404, "weighted_reads": 2702, "category": "外观/颜值"}, {"text": "问界M6的设计语言与白猫的未来场景融合", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2696, "weighted_reads": 2696, "category": "外观/颜值"}, {"text": "钛空银问界M6的外观设计", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2683, "weighted_reads": 2683, "category": "外观/颜值"}, {"text": "四款汽车内饰颜色（韶华杏、紫慕白、引力红", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2673, "weighted_reads": 2673, "category": "空间/内饰"}, {"text": "问界M6的预售活动", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 2672, "weighted_reads": 2672, "category": "价格/权益"}, {"text": "问界M6的内饰、中控屏、大灯设计", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 2649, "weighted_reads": 2649, "category": "智能座舱"}, {"text": "问界M6的科技驾驶体验", "size": 11, "color": "#f5854a", "notes": 1, "reads": 2648, "weighted_reads": 2648, "category": "品牌/车型泛提及"}, {"text": "问界M6的市场定位与产品特性", "size": 11, "color": "#f5854a", "notes": 1, "reads": 15781, "weighted_reads": 2630, "category": "品牌/车型泛提及"}, {"text": "问界M6/M7/M8/M9并排停放的场景", "size": 11, "color": "#f5854a", "notes": 1, "reads": 10461, "weighted_reads": 2615, "category": "品牌/车型泛提及"}, {"text": "华为乾崑ADS技术体系", "size": 11, "color": "#06d6a0", "notes": 1, "reads": 30963, "weighted_reads": 2580, "category": "智能驾驶"}, {"text": "新车到货速度", "size": 11, "color": "#8ecae6", "notes": 1, "reads": 2578, "weighted_reads": 2578, "category": "品牌/车型资讯"}, {"text": "室内设计/家具实物", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2527, "weighted_reads": 2527, "category": "外观/颜值"}, {"text": "问界M6的流光青配色及设计", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2495, "weighted_reads": 2495, "category": "外观/颜值"}, {"text": "钛空银（颜色/产品）", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2448, "weighted_reads": 2448, "category": "外观/颜值"}, {"text": "问界M6「曜石黑」配色的车身设计", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2448, "weighted_reads": 2448, "category": "外观/颜值"}, {"text": "通过优惠购车的成功案例", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 2429, "weighted_reads": 2429, "category": "价格/权益"}, {"text": "问界M6的外观设计、内饰配置及功能创新", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2428, "weighted_reads": 2428, "category": "空间/内饰"}, {"text": "车子的配色和大小", "size": 11, "color": "#c77dff", "notes": 1, "reads": 4818, "weighted_reads": 2409, "category": "外观/颜值"}, {"text": "电动车续航测试结果", "size": 11, "color": "#ef476f", "notes": 1, "reads": 2401, "weighted_reads": 2401, "category": "驾控/性能"}, {"text": "鸿蒙智行的产品发展与未来迭代", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 7140, "weighted_reads": 2380, "category": "智能座舱"}, {"text": "理想i6", "size": 11, "color": "#e9c46a", "notes": 3, "reads": 5180, "weighted_reads": 2378, "category": "竞品提及(正向)"}, {"text": "问界M6的内饰设计、座椅体验、购车权益", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2375, "weighted_reads": 2375, "category": "空间/内饰"}, {"text": "问界M6的吸顶屏、后排座椅设计及车载冰箱", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2345, "weighted_reads": 2345, "category": "空间/内饰"}, {"text": "流光青与钛空银两款车漆配色", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2330, "weighted_reads": 2330, "category": "外观/颜值"}, {"text": "鸿蒙智行春季新品发布会及新车阵容", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 11534, "weighted_reads": 2307, "category": "智能座舱"}, {"text": "中型家庭运动越野SUV", "size": 11, "color": "#8ecae6", "notes": 1, "reads": 2304, "weighted_reads": 2304, "category": "生活方式/家庭场景"}, {"text": "问界M6的促销政策及购车优惠", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 4583, "weighted_reads": 2292, "category": "价格/权益"}, {"text": "OPPO Reno16手机的外观设计与拍", "size": 11, "color": "#c77dff", "notes": 1, "reads": 4559, "weighted_reads": 2280, "category": "外观/颜值"}, {"text": "灵感橱窗", "size": 11, "color": "#7ec8e8", "notes": 2, "reads": 2276, "weighted_reads": 2276, "category": "智能座舱"}, {"text": "问界M6的外观与科技配置", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2271, "weighted_reads": 2271, "category": "外观/颜值"}, {"text": "提车", "size": 11, "color": "#f4a261", "notes": 1, "reads": 2228, "weighted_reads": 2228, "category": "交付/购车"}, {"text": "中大型五座SUV的外观设计与科技配置", "size": 11, "color": "#c77dff", "notes": 1, "reads": 6620, "weighted_reads": 2207, "category": "外观/颜值"}, {"text": "鸿蒙智行五界的新车型", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 26441, "weighted_reads": 2203, "category": "智能座舱"}, {"text": "流光青＋紫慕白＋电动踏板的购车计划", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2168, "weighted_reads": 2168, "category": "外观/颜值"}, {"text": "车辆外观设计与内饰配置", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2149, "weighted_reads": 2149, "category": "空间/内饰"}, {"text": "颜色选择（黑色与银色的对比）", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2080, "weighted_reads": 2080, "category": "外观/颜值"}, {"text": "流光青与邵华杏的色彩组合", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2073, "weighted_reads": 2073, "category": "外观/颜值"}, {"text": "问界M6的灵动橱窗设计", "size": 11, "color": "#c77dff", "notes": 1, "reads": 4134, "weighted_reads": 2067, "category": "外观/颜值"}, {"text": "车衣品牌", "size": 11, "color": "#ffd166", "notes": 1, "reads": 4096, "weighted_reads": 2048, "category": "空间/内饰"}, {"text": "问界M6熊猫配色展车", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2041, "weighted_reads": 2041, "category": "外观/颜值"}, {"text": "问界M6的外观设计与交付体验", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2034, "weighted_reads": 2034, "category": "外观/颜值"}, {"text": "问界M6创新副驾置物位设计", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2009, "weighted_reads": 2009, "category": "外观/颜值"}, {"text": "问界M6的市场表现", "size": 11, "color": "#f5854a", "notes": 4, "reads": 4099, "weighted_reads": 2000, "category": "品牌/车型泛提及"}, {"text": "问界 M6 的安全设计", "size": 11, "color": "#c77dff", "notes": 1, "reads": 1970, "weighted_reads": 1970, "category": "外观/颜值"}, {"text": "银色（颜色/产品）", "size": 11, "color": "#c77dff", "notes": 1, "reads": 1952, "weighted_reads": 1952, "category": "外观/颜值"}, {"text": "问界M6的“副驾灵感橱窗”功能及可DIY", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 3856, "weighted_reads": 1928, "category": "智能座舱"}, {"text": "问界M6购车优惠活动", "size": 11, "color": "#a8dadc", "notes": 3, "reads": 4071, "weighted_reads": 1868, "category": "价格/权益"}, {"text": "鸿蒙智行2026年新车发布计划", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 16701, "weighted_reads": 1856, "category": "智能座舱"}, {"text": "购车决策及未来用车场景", "size": 11, "color": "#f4a261", "notes": 1, "reads": 10939, "weighted_reads": 1823, "category": "交付/购车"}, {"text": "问界M6新能源SUV", "size": 11, "color": "#f5854a", "notes": 1, "reads": 1817, "weighted_reads": 1817, "category": "品牌/车型泛提及"}, {"text": "问界M6购车权益及赠品谈判", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 1816, "weighted_reads": 1816, "category": "价格/权益"}, {"text": "全新问界M6车型", "size": 11, "color": "#f5854a", "notes": 1, "reads": 1815, "weighted_reads": 1815, "category": "品牌/车型泛提及"}, {"text": "未发布的车及文创设计项目", "size": 11, "color": "#c77dff", "notes": 1, "reads": 1800, "weighted_reads": 1800, "category": "外观/颜值"}, {"text": "问界M6的灵感橱窗和前备箱设计", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 5351, "weighted_reads": 1784, "category": "智能座舱"}, {"text": "杏色内饰的汽车", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1768, "weighted_reads": 1768, "category": "空间/内饰"}, {"text": "M5和M6两款SUV的定位与性能", "size": 11, "color": "#f5854a", "notes": 1, "reads": 3496, "weighted_reads": 1748, "category": "品牌/车型泛提及"}, {"text": "问界M6流光青颜色", "size": 11, "color": "#c77dff", "notes": 1, "reads": 1711, "weighted_reads": 1711, "category": "外观/颜值"}, {"text": "M6新车交付体验（包括交车现场布置、车辆", "size": 11, "color": "#f4a261", "notes": 1, "reads": 1679, "weighted_reads": 1679, "category": "交付/购车"}, {"text": "问界M6的发布及九大礼遇", "size": 11, "color": "#f5854a", "notes": 1, "reads": 1667, "weighted_reads": 1667, "category": "品牌/车型泛提及"}, {"text": "父母", "size": 11, "color": "#8ecae6", "notes": 1, "reads": 1657, "weighted_reads": 1657, "category": "生活方式/家庭场景"}];
+      const wrap = document.getElementById('wc_pos_wrap');
+      const canvas = document.getElementById('wc_pos');
+      const tooltip = document.getElementById('wc_pos_tooltip');
+      function render(){
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        if(w<10||h<10) return;
+        const dpr = window.devicePixelRatio||1;
+        canvas.width=w*dpr; canvas.height=h*dpr;
+        canvas.style.width=w+'px'; canvas.style.height=h+'px';
+        const ctx=canvas.getContext('2d');
+        ctx.clearRect(0,0,w,h); ctx.scale(dpr,dpr);
+        const placed=[], cx=w/2, cy=h/2, wordHits=[], padding=12;
+        function adjustSize(word){ ctx.font='bold '+word.size+'px sans-serif'; const ww=ctx.measureText(word.text).width, maxW=(w-padding*2)*0.95; return ww>maxW?Math.max(10,word.size*maxW/ww):word.size; }
+        function measureWord(text,size){ ctx.font='bold '+size+'px sans-serif'; const m=ctx.measureText(text); return {w:m.width+4,h:size*1.1+2}; }
+        function overlaps(nx,ny,nw,nh){ for(const p of placed){ if(Math.abs(nx-p.x)<(nw+p.w)/2+1&&Math.abs(ny-p.y)<(nh+p.h)/2+1) return true; } return false; }
+        function placeWord(word){
+          const size=adjustSize(word), dim=measureWord(word.text,size), sw=Object.assign({},word,{size});
+          if(!overlaps(cx,cy,dim.w,dim.h)){ placed.push({x:cx,y:cy,w:dim.w,h:dim.h,word:sw}); wordHits.push({x:cx-dim.w/2,y:cy-dim.h/2,w:dim.w,h:dim.h,word:sw}); return; }
+          let angle=Math.random()*Math.PI*2;
+          for(let step=0;step<4000;step++){
+            const r=4+step*0.25;
+            if(r>Math.max(w,h)*1.5) return;
+            const x=cx+r*Math.cos(angle), y=cy+r*Math.sin(angle);
+            if(x<dim.w/2+padding||x>w-dim.w/2-padding||y<dim.h/2+padding||y>h-dim.h/2-padding){ angle+=0.08; continue; }
+            if(!overlaps(x,y,dim.w,dim.h)){ placed.push({x,y,w:dim.w,h:dim.h,word:sw}); wordHits.push({x:x-dim.w/2,y:y-dim.h/2,w:dim.w,h:dim.h,word:sw}); return; }
+            angle+=0.08;
+          }
+        }
+        for(const word of data) placeWord(word);
+        for(const p of placed){ ctx.font='bold '+p.word.size+'px sans-serif'; ctx.fillStyle=p.word.color; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(p.word.text,p.x,p.y); }
+        canvas.onmousemove=(e)=>{
+          const rect=canvas.getBoundingClientRect(), mx=e.clientX-rect.left, my=e.clientY-rect.top;
+          let found=null;
+          for(const hit of wordHits){ if(mx>=hit.x&&mx<=hit.x+hit.w&&my>=hit.y&&my<=hit.y+hit.h){ found=hit.word; break; } }
+          if(found){ tooltip.style.display='block'; tooltip.style.left=(e.clientX-wrap.closest('[id$="_container"]').getBoundingClientRect().left+10)+'px'; tooltip.style.top=(e.clientY-wrap.closest('[id$="_container"]').getBoundingClientRect().top-10)+'px'; tooltip.innerHTML='<b>'+found.text+'</b><br>'+found.notes+'篇 · 真实阅读'+found.reads.toLocaleString()+'<br>降权后阅读'+found.weighted_reads.toLocaleString()+'（用于排序）<br>分类：'+found.category; }
+          else tooltip.style.display='none';
+        };
+        canvas.onmouseleave=()=>{ tooltip.style.display='none'; };
+      }
+      window.wordCloudRenders = window.wordCloudRenders || [];
+      window.wordCloudRenders.push(render);
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',render); else render();
+      window.addEventListener('resize',render);
+    })();
+    </script></div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">品牌/车型泛提及</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">213</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">514,906</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">2,417</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#f5854a;">⚠️ 1.10x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">213篇是最大基本盘，效率1.10x略高于均值——多为"问界M6"车型本身的常规提及（已清理68篇提及其他车型未提M6的误入笔记）</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">外观/颜值</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">231</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">432,586</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">1,873</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">⚠️ 0.85x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">231篇效率0.85x接近均值，M6的多彩配色体系（7种颜色）是重要话题来源</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">空间/内饰</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">125</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">390,153</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">3,121</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#f5854a;">⚠️ 1.42x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">125篇效率1.42x是积极侧较高效方向，手办展示柜/220V插座/储物空间等M6特色配置反馈较好</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">智能座舱</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">109</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">190,332</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">1,746</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">❌ 0.79x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">109篇效率0.79x略低于均值</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">智能驾驶</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">26</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">149,539</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">5,752</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#f5854a;">✅ 2.62x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">26篇效率2.62x是积极侧最高，遥控泊车/ADS辅助驾驶体验反馈突出，但样本量偏小</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">驾控/性能</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">24</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">133,084</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">5,545</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#f5854a;">✅ 2.52x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">24篇效率2.52x同样很高，续航/操控实测内容传播力强，样本量同样偏小</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">品牌/车型资讯</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">41</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">124,839</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">3,045</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#f5854a;">⚠️ 1.39x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">41篇效率1.39x，行业资讯/新车发布类内容表现稳定</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">交付/购车</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">58</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">96,375</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">1,662</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">❌ 0.76x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">58篇效率0.76x略低于均值</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">价格/权益</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">83</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">77,592</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">935</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">❌ 0.43x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">83篇效率仅0.43x明显偏低，是积极侧最低区间</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">竞品提及(正向)</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">16</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">37,341</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">2,334</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#f5854a;">⚠️ 1.06x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">16篇效率1.06x接近均值</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #f5854a;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#f5854a;">生活方式/家庭场景</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">11</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">20,250</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">1,841</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">⚠️ 0.84x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">11篇效率0.84x接近均值，样本较小</div>
+        </div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span style="color:#ffd700;">⭐</span> 明星情绪 · 成就感 — 主题聚合分析</div>
+    <div style="font-size:12px;color:#8a8a8a;margin-bottom:12px;">19 篇笔记 / 均阅读4,514 / 原始效率1.96x（按SPU绑定数降权后为2.58x）</div>
+    <div class="analysis" style="border-left-color:#ffd700;background:rgba(255,215,0,0.03);margin-bottom:14px;">
+      <div class="analysis-title" style="color:#ffd700;">💡 关键发现（基于真实主题聚合数据）</div>
+      <ul style="margin:0;padding-left:18px;">
+        <li>与部分被多SPU笔记稀释的"接纳感/信念感"不同，成就感TOP案例基本都是单SPU纯净内容——"新车"（4.9万阅读，单SPU，情绪关键词"如期所愿"，实为提车如愿叙事）是全表最高阅读笔记，"鸿蒙智行销售数据/新车发布"（1.8万阅读，绑定3个SPU）次之，两者及经用户核实为真实购车提车内容的"购车事件"（293阅读）共同构成"交付/购车"主题（6篇，效率2.58x，是成就感情绪里体量最大的主题）；另有1篇"自己的成就"经核实实为灵感橱窗功能体验，已归入智能座舱。</li>
+        <li>真实驱动力是"提车/交付达成""销量里程碑突破"这类车主个人成就叙事，泛泛的品牌整体成绩播报（"预订量突破10万台"）反而效率最低仅0.11x。</li>
+        <li>样本量19篇偏小，是5个深度模块里样本第二小的，结论方向可信但量级判断需谨慎。</li>
+      </ul>
+    </div>
+    <table>
+      <thead><tr><th>主题</th><th style="text-align:center;">笔记数</th><th style="text-align:right;">均阅读</th><th style="text-align:right;">效率</th><th>内容方向（📊数据规律 / 💡推断建议）</th><th>真实TOP笔记</th></tr></thead>
+      <tbody><tr>
+      <td style="font-weight:600;">交付/购车</td>
+      <td style="text-align:center;">6</td>
+      <td style="text-align:right;">11,655</td>
+      <td style="text-align:right;color:#e86550;font-weight:600;">2.58x</td>
+      <td style="font-size:12px;">📊 6篇是最大来源，效率2.58x，TOP案例"新车"单篇4.9万阅读（spu=1单一纯净，情绪关键词="如期所愿"，实质是提车如愿叙事），次高"鸿蒙智行4月及1-4月销售数据、新车发布销售成绩"（1.8万阅读，绑定3个SPU），另有"购车事件"（293阅读，已核实为真实购车提车内容）<br><span style="opacity:0.75;">💡 真实提车/交付发愿叙事是成就感情绪最高效的内容方向，建议持续产出真实车主提车/交付里程碑内容</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69eca40d0000000038035d3c" target="_blank" style="color:#7ec8e8;text-decoration:none;">新车（48,771阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">驾控/性能</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">2,934</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.65x</td>
+      <td style="font-size:12px;">📊 2篇效率0.65x偏低，TOP案例"车辆续航表现及驾驶体验"（3,466阅读，单SPU纯净）<br><span style="opacity:0.75;">💡 样本太小不构成趋势，暂不建议作为主力方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/6a35dc570000000007023de0" target="_blank" style="color:#7ec8e8;text-decoration:none;">车辆续航表现及驾驶体验（3,466阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">其他</td>
+      <td style="text-align:center;">5</td>
+      <td style="text-align:right;">781</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.17x</td>
+      <td style="font-size:12px;">📊 5篇效率仅0.17x明显偏低，TOP案例"自我能力（完成每日做饭）"（1,464阅读）——经核实"自身努力的结果"实为销售工作日常，与车本身无关，是真实的非车相关噪音<br><span style="opacity:0.75;">💡 这类弱关联/非车相关内容效率天生不高，不建议作为主力内容方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69eb3a42000000001a02c28d" target="_blank" style="color:#7ec8e8;text-decoration:none;">自我能力（完成每日做饭）（1,464阅读,spu=2）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">价格/权益</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">2,429</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.54x</td>
+      <td style="font-size:12px;">📊 仅1篇效率0.54x，"通过优惠购车的成功案例"（2,429阅读，单SPU纯净）<br><span style="opacity:0.75;">💡 样本仅1篇，趋势需要更多验证</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69d4f618000000002102e71b" target="_blank" style="color:#7ec8e8;text-decoration:none;">通过优惠购车的成功案例（2,429阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">品牌/车型泛提及</td>
+      <td style="text-align:center;">4</td>
+      <td style="text-align:right;">504</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.11x</td>
+      <td style="font-size:12px;">📊 4篇效率仅0.11x明显偏低，TOP案例"问界M6的预订量突破10万台"（1560阅读）——品牌整体销量播报类内容传播力有限<br><span style="opacity:0.75;">💡 泛泛的品牌成绩播报不如真实车主个人成就叙事（提车/自驾达成）传播力强</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e59e2e0000000021004dea" target="_blank" style="color:#7ec8e8;text-decoration:none;">问界M6的预订量突破10万台（1,560阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">智能座舱</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">1,609</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.36x</td>
+      <td style="font-size:12px;">📊 1篇（"自己的成就"，1,609阅读，绑定3个SPU），经核实真实内容是灵感橱窗功能体验，样本仅1篇不构成趋势<br><span style="opacity:0.75;">💡 灵感橱窗作为鸿蒙生态特色功能，若能积累更多真实体验案例值得关注</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69d860a60000000023013b06" target="_blank" style="color:#7ec8e8;text-decoration:none;">自己的成就（1,609阅读,spu=3）↗</a></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span style="color:#7ec8e8;">🌱</span> 高潜情绪 · 愉悦 — 主题聚合分析（⚠️ 样本量极小）</div>
+    <div style="font-size:12px;color:#8a8a8a;margin-bottom:12px;">5 篇笔记 / 均阅读5,078 / 降权效率3.51x（已删除1篇经核实与M6无关的"品牌合作推广活动"）</div>
+    <div class="analysis" style="border-left-color:#7ec8e8;background:rgba(126,200,232,0.03);margin-bottom:14px;">
+      <div class="analysis-title" style="color:#7ec8e8;">💡 关键发现（⚠️ 样本量仅5篇，结论仅供方向参考，不构成确定性趋势）</div>
+      <ul style="margin:0;padding-left:18px;">
+        <li>愉悦总量仅5篇（已删除1篇经核实与M6无关的"品牌合作推广活动"），是5个深度模块里样本最小的，但内容高度纯净——TOP3笔记全部是单SPU绑定（"提车事件"9,502阅读、"7种颜色的物品"9,025阅读、"韶华杏色调的座舱设计"6,548阅读）。</li>
+        <li>驱动力集中在"配色多样性"和"提车瞬间的情绪记录"，与成就感的"交付达成"叙事有相通之处，可能是同一个真实用户心理（购车完成后的满足）在不同细分情绪标签下的体现。</li>
+        <li>样本太小不适合作为独立内容方向的量化依据，但方向（配色种草+提车分享）与其他情绪的发现互相印证，值得持续观察。</li>
+      </ul>
+    </div>
+    <table>
+      <thead><tr><th>主题</th><th style="text-align:center;">笔记数</th><th style="text-align:right;">均阅读</th><th style="text-align:right;">效率</th><th>内容方向（📊数据规律 / 💡推断建议）</th><th>真实TOP笔记</th></tr></thead>
+      <tbody><tr>
+      <td style="font-weight:600;">外观/颜值</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">7,786</td>
+      <td style="text-align:right;color:#e86550;font-weight:600;">1.53x</td>
+      <td style="font-size:12px;">📊 2篇效率1.53x，TOP案例"7种颜色的物品（如汽车/产品）"（9,025阅读，单SPU纯净）和"韶华杏色调的座舱设计"——配色多样性是愉悦情绪的真实驱动力<br><span style="opacity:0.75;">💡 M6的多彩配色体系（7色选择）是差异化视觉资产，建议持续产出配色种草内容</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69d2095f000000002202438e" target="_blank" style="color:#7ec8e8;text-decoration:none;">7种颜色的物品（如汽车/产品）（9,025阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">交付/购车</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">9,502</td>
+      <td style="text-align:right;color:#e86550;font-weight:600;">1.87x</td>
+      <td style="font-size:12px;">📊 1篇效率1.87x，"提车事件"单篇9,502阅读（单SPU纯净）——真实提车瞬间的情绪记录传播力强<br><span style="opacity:0.75;">💡 样本仅1篇，趋势需要更多真实提车内容验证，但方向值得尝试</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69fc06ea0000000038037fff" target="_blank" style="color:#7ec8e8;text-decoration:none;">提车事件（9,502阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">其他</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">156</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.03x</td>
+      <td style="font-size:12px;">📊 2篇效率仅0.03x明显偏低（已删除1篇经核实与M6无关的"品牌合作推广活动"），剩余"假期出行体验"（240阅读）和"大家（群体祝福对象）"（73阅读）均为弱关联内容<br><span style="opacity:0.75;">💡 样本极小且弱关联，不构成内容方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69fc4b200000000037034940" target="_blank" style="color:#7ec8e8;text-decoration:none;">假期出行体验、书院集市氛围、邻居车辆互动（240阅读,spu=4）↗</a></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span style="color:#f5854a;">📢</span> 提效目标 · 期待感 — 主题聚合分析</div>
+    <div style="font-size:12px;color:#8a8a8a;margin-bottom:12px;">281 篇 / 均阅读1,701 / 降权效率0.61x</div>
+    <div class="analysis" style="border-left-color:#f5854a;background:rgba(245,133,74,0.03);margin-bottom:14px;">
+      <div class="analysis-title" style="color:#f5854a;">💡 为什么低效？真实根因拆解</div>
+      <ul style="margin:0;padding-left:18px;">
+        <li><b style="color:#e86550">主体量效率只能持平，没有真正高效驱动力</b>："品牌/车型泛提及"150篇（53%体量）是期待感的最大来源，但效率仅1.12x接近均值——这类"问界M6新锐王牌的创新功能与设计"式的泛泛新车宣发，已经是期待感内容的天花板，单靠堆量提不动。</li>
+        <li><b style="color:#06d6a0">真正能跑动的是"交付/购车"的具体服务细节</b>：28篇效率1.23x，真实案例"小6轮毂的交付及小8的升级服务"单篇绑定1个SPU、3.0万阅读——这是期待感里唯一不被多SPU污染、真实奏效的信号，但体量只有28篇（10%），相对"泛提及"的150篇严重供给不足。</li>
+        <li><b style="color:#e86550">"驾控/性能"(0.15x)和"竞品对比"(0.15x)是期待感全表最低效的两个主题</b>：续航测试、竞品政策分析这类理性/技术内容跟"期待（展望/憧憬）"这个情绪本质不匹配——与M7报告发现的"钦佩感适配宏观叙事、不适配具体技术细节"规律一致。</li>
+      </ul>
+    </div>
+    <div class="analysis" style="border-left-color:#06d6a0;background:rgba(6,214,160,0.05);margin-bottom:14px;">
+      <div class="analysis-title" style="color:#06d6a0;">✅ 具体提效路径（可执行建议）</div>
+      <ul style="margin:0;padding-left:18px;">
+        <li><b>加码方向</b>：把"交付/购车"的具体服务细节内容从28篇拉升体量——轮毂/配件升级、交付时间表、提车前需知清单等"即将到手的具体东西"比泛泛"新车发布"更能真正触发期待感。</li>
+        <li><b>升级方向</b>："品牌/车型泛提及"150篇这个基本盘不必减量，但要从"泛泛宣发新车"升级为"具体功能点的期待"（比如"M6的XX功能终于要上车了"而不是笼统描述"创新功能与设计"），提升具体化约定能改善个位数效率。</li>
+        <li><b>减量方向</b>：驾控/性能、竞品对比这类理性内容不适合期待感角度，建议改用"钦佩感"或"信赖感"角度包装续航数据/竞品分析类内容，不要往期待感里塞。</li>
+        <li>⚠️ "购买决策/纠结"虽效率1.34x看似最高，但TOP1"理想i6的购买决策"绑定10个SPU，是多SPU横评的伪信号，不建议作为主力提效方向。</li>
+      </ul>
+    </div>
+    <table>
+      <thead><tr><th>主题</th><th style="text-align:center;">笔记数</th><th style="text-align:right;">均阅读</th><th style="text-align:right;">效率</th><th>内容方向（📊数据规律 / 💡推断建议）</th><th>真实TOP笔记</th></tr></thead>
+      <tbody><tr>
+      <td style="font-weight:600;">品牌/车型泛提及</td>
+      <td style="text-align:center;">150</td>
+      <td style="text-align:right;">1,911</td>
+      <td style="text-align:right;color:#ffd166;font-weight:600;">1.12x</td>
+      <td style="font-size:12px;">📊 150篇（53%）是最大来源，效率1.12x略高于均值，TOP案例"问界M6新锐王牌的创新功能与设计"（3.7万阅读，单SPU）——车型整体新品期待是稳定基本盘<br><span style="opacity:0.75;">💡 常规的新车期待内容效率持平略高，是可持续的基本盘方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/6985cde7000000001a01dd38" target="_blank" style="color:#7ec8e8;text-decoration:none;">问界M6新锐王牌的创新功能与设计（37,044阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">其他</td>
+      <td style="text-align:center;">58</td>
+      <td style="text-align:right;">1,305</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.77x</td>
+      <td style="font-size:12px;">📊 58篇（21%）效率0.77x偏低，TOP案例"工作内容的变动与自我提升"（9,805阅读，绑定6个SPU）——与车型本身弱相关的泛内容，多SPU绑定进一步稀释了真实性<br><span style="opacity:0.75;">💡 这类弱相关内容效率天然不高，不建议作为主力内容方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/698d504c000000000e00e54a" target="_blank" style="color:#7ec8e8;text-decoration:none;">工作内容的变动与自我提升（9,805阅读,spu=6）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">交付/购车</td>
+      <td style="text-align:center;">28</td>
+      <td style="text-align:right;">2,086</td>
+      <td style="text-align:right;color:#ffd166;font-weight:600;">1.23x</td>
+      <td style="font-size:12px;">📊 28篇效率1.23x高于均值，TOP案例"小6轮毂的交付及小8的升级服务"（3.0万阅读，单SPU）——真实交付/服务升级信息传播力较好<br><span style="opacity:0.75;">💡 交付相关的具体服务细节（轮毂/升级）比泛泛的"即将交付"预告更有传播力</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/6a0d77c2000000003502d959" target="_blank" style="color:#7ec8e8;text-decoration:none;">小6轮毂的交付及小8的升级服务（29,747阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">购买决策/纠结</td>
+      <td style="text-align:center;">15</td>
+      <td style="text-align:right;">2,272</td>
+      <td style="text-align:right;color:#ffd166;font-weight:600;">1.34x</td>
+      <td style="font-size:12px;">📊 15篇效率1.34x较高，但TOP1"理想i6的购买决策"（1.5万阅读，绑定10个SPU）和TOP2"购车决策及未来用车场景"（1.1万阅读，绑定6个SPU）都是多车横评内容——真实单SPU信号更弱（如"下一辆车的选择"仅1,156阅读，单SPU纯净）<br><span style="opacity:0.75;">💡 该主题效率数字受多SPU横评笔记显著拉高，不宜直接当作"期待感下购车决策类内容高效"的证据，建议优先参考单SPU纯净内容的真实表现</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69f8caca0000000023006669" target="_blank" style="color:#7ec8e8;text-decoration:none;">理想 i6 的购买决策（15,011阅读,spu=10）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">价格/权益</td>
+      <td style="text-align:center;">13</td>
+      <td style="text-align:right;">912</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.54x</td>
+      <td style="font-size:12px;">📊 13篇效率0.54x偏低，TOP案例"购车优惠信息"（4,054阅读，单SPU纯净）——泛泛的优惠资讯传播力有限<br><span style="opacity:0.75;">💡 单纯的优惠播报效率不高，建议结合真实购车决策场景包装</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e898a20000000023016ad4" target="_blank" style="color:#7ec8e8;text-decoration:none;">购车优惠信息（4,054阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">销量/行业资讯</td>
+      <td style="text-align:center;">6</td>
+      <td style="text-align:right;">828</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.49x</td>
+      <td style="font-size:12px;">📊 6篇效率0.49x偏低，TOP案例"5月份新车型发布及销量增长"（2,669阅读，绑定9个SPU）——多SPU横评内容稀释了真实性<br><span style="opacity:0.75;">💡 泛行业销量播报效率不高，不建议作为主力方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69f4a6bf0000000037036993" target="_blank" style="color:#7ec8e8;text-decoration:none;">5月份新车型发布及销量增长（2,669阅读,spu=9）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">外观/颜值</td>
+      <td style="text-align:center;">4</td>
+      <td style="text-align:right;">758</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.45x</td>
+      <td style="font-size:12px;">📊 4篇效率0.45x偏低，TOP案例"未发布的车及文创设计项目"（1,800阅读，单SPU纯净）<br><span style="opacity:0.75;">💡 样本较小，外观期待类内容当前效率不理想</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69bfe6bd0000000021010d87" target="_blank" style="color:#7ec8e8;text-decoration:none;">未发布的车及文创设计项目（1,800阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">智能座舱</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">1,092</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.64x</td>
+      <td style="font-size:12px;">📊 2篇效率0.64x，TOP案例"2026年鸿蒙系五大品牌新车及发布会"（1,531阅读，绑定3个SPU）——宏观品牌矩阵叙事而非具体座舱功能<br><span style="opacity:0.75;">💡 样本太小，且内容偏品牌矩阵宏观叙事，不构成"期待座舱功能"的证据</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/6972dc810000000009038026" target="_blank" style="color:#7ec8e8;text-decoration:none;">2026年鸿蒙系五大品牌新车及发布会（1,531阅读,spu=3）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">驾控/性能</td>
+      <td style="text-align:center;">4</td>
+      <td style="text-align:right;">258</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.15x</td>
+      <td style="font-size:12px;">📊 4篇效率仅0.15x是期待感里效率最低的主题，TOP案例"西藏桃林自驾游及车辆续航测试"（574阅读，单SPU）<br><span style="opacity:0.75;">💡 驾控/续航类期待内容当前传播力明显不足，不建议作为主力方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e83cb0000000001a031b6d" target="_blank" style="color:#7ec8e8;text-decoration:none;">西藏桃林自驾游及车辆续航测试（574阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">竞品对比</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">253</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.15x</td>
+      <td style="font-size:12px;">📊 仅1篇效率0.15x，"理想i6的未来政策与改款"（253阅读，绑定2个SPU）<br><span style="opacity:0.75;">💡 样本仅1篇，不构成趋势</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69bcdeff00000000210137a1" target="_blank" style="color:#7ec8e8;text-decoration:none;">理想i6的未来政策与改款（253阅读,spu=2）↗</a></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">◆</span> 专项深挖：灵感橱窗 — 跨情绪机会点分析</div>
+    <div class="analysis">
+      <div class="analysis-title">关键发现（基于44篇真实笔记，去重后跨6种情绪）</div>
+      <ul>
+        <li><b style="color:#06d6a0">这是真实存在、有体量支撑的差异化资产</b>：44篇覆癖6种情绪，93%积极valence（几乎无负面），93%单SPU纯净（几乎不受多车横评污染）——是M6专属的干净信号，跟"生活方式"这类样本不足月10篇的方向性质完全不同。</li>
+        <li><b style="color:#e86550">但整体传播效率偏低(0.62x)，问题不在功能本身，在"怎么讲"</b>：均阅读1,439低于大盘均值2,304——当前大部分内容（欣赏感20篇/启迪感11篇，合计占71%）停留在"好看""有意思"的表层描述，没有讲出让人真正想传播的理由。</li>
+        <li><b style="color:#06d6a0">唯一跑赢均值的是"期待感"角度（4篇，效率1.25x）</b>：真实案例"灵感橱窗扩展坚及未来可拓展配件"（6,882阅读）、"灵感橱窗和磁吸功能"（4,126阅读）——用户对"以后还能装什么/怎么延展"这种前瞻性想象力，比单纯展示功能好看更买账。</li>
+        <li>"启迪感"11篇效率反而最低(0.41x)——纯粍强调"有创意/有意思"这种情绪化描述，如果不给出具体可玩法，传播力有限。</li>
+      </ul>
+    </div>
+    <table>
+      <thead><tr><th>#</th><th>真实标的词</th><th style="text-align:center;">所属情绪</th><th style="text-align:right;">阅读量</th><th style="text-align:right;">笔记</th></tr></thead>
+      <tbody><tr><td>1</td><td style="color:#e8e6e3;">问界M6的内饰设计</td><td style="text-align:center;"><span class="tag tag-gold">欣赏感</span></td><td style="text-align:right;font-weight:700;">10,864</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69ece6d00000000036030404" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>2</td><td style="color:#e8e6e3;">莫兰迪紫撞白的汽车设计、软质包覆+精致缝线的内饰、随动屏+灵感橱窗的智能功能</td><td style="text-align:center;"><span class="tag tag-gold">欣赏感</span></td><td style="text-align:right;font-weight:700;">10,258</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69de15690000000023016962" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>3</td><td style="color:#e8e6e3;">M6的“灵感橱窗”扩展坞及未来可拓展配件</td><td style="text-align:center;"><span class="tag tag-gold">期待感</span></td><td style="text-align:right;font-weight:700;">6,882</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69b8bad4000000001b023595" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>4</td><td style="color:#e8e6e3;">问界M6的灵感橱窗和前备箱设计</td><td style="text-align:center;"><span class="tag tag-gold">惊喜</span></td><td style="text-align:right;font-weight:700;">5,351</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69ef1a19000000003501c75f" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>5</td><td style="color:#e8e6e3;">问界M6的灵感橱窗和磁吸功能</td><td style="text-align:center;"><span class="tag tag-gold">期待感</span></td><td style="text-align:right;font-weight:700;">4,126</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69b8cedb000000001a029d8a" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>6</td><td style="color:#e8e6e3;">问界M6的“副驾灵感橱窗”功能及可DIY的个性化配件</td><td style="text-align:center;"><span class="tag tag-gold">欣赏感</span></td><td style="text-align:right;font-weight:700;">3,856</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69c4b28a000000001a02f36d" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>7</td><td style="color:#e8e6e3;">问界M6的车内空间设计</td><td style="text-align:center;"><span class="tag tag-gold">启迪感</span></td><td style="text-align:right;font-weight:700;">3,180</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69d0ed0b00000000220011f4" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>8</td><td style="color:#e8e6e3;">灵感橱窗</td><td style="text-align:center;"><span class="tag tag-gold">启迪感</span></td><td style="text-align:right;font-weight:700;">2,123</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69ed9dd2000000003502c66d" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>9</td><td style="color:#e8e6e3;">问界M6的隐藏功能</td><td style="text-align:center;"><span class="tag tag-gold">探秘感</span></td><td style="text-align:right;font-weight:700;">1,949</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69f2e36500000000220265e7" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr><tr><td>10</td><td style="color:#e8e6e3;">问界M6车辆及交付仪式</td><td style="text-align:center;"><span class="tag tag-gold">欣赏感</span></td><td style="text-align:right;font-weight:700;">1,504</td><td style="text-align:right;"><a href="https://www.xiaohongshu.com/explore/69edb7f6000000001e00d8c5" target="_blank" style="color:#7ec8e8;text-decoration:none;">查看↗</a></td></tr></tbody>
+    </table>
+    <div style="margin-top:14px;padding:14px 16px;background:rgba(6,214,160,0.06);border-left:3px solid #06d6a0;border-radius:0 6px 6px 0;font-size:13px;color:#e8e6e3;">
+      <b style="color:#06d6a0">💡 内容策略建议</b>：灵感橱窗内容应从"这个功能好看/有意思"升级为"磁吸生态未来可拓展性"角度——具体展示"还能装什么配件/怎么DIY延展"，比单纯的功能展示更能触发期待感和真实传播。这是当前投入产出比有提升空间、但方向本身已被验证的真实机会（区别于生活方式这种样本不足的探索性方向）。
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tab2">
+  <div class="card">
+    <div class="card-title"><span class="icon">◆</span> 消极标的词 · 词云 + 分类聚合</div>
+    <div style="background:#e865501a;border-left:3px solid #e86550;padding:14px 16px;border-radius:0 6px 6px 0;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;color:#e86550;margin-bottom:6px;">分类洞察</div>
+      <ul style="margin:0;padding-left:18px;font-size:13px;color:#e8e6e3;opacity:0.85;">
+        <li>「购买决策/纠结」182篇（41%）是体量最大的负面来源，效率1.24x高于均值——延续M7/M9同样规律，购车决策焦虑是汽车品类共性最大负面来源</li>
+        <li>「智能座舱」17篇效率2.11x是消极侧效率最高，苹果手机互联限制等座舱互联体验反馈值得关注，但样本量偏小</li>
+        <li>「竞品对比」14篇效率仅0.27x是消极侧最低，说明直接竞品对比类负面内容传播力反而不强</li>
+        <li>「品牌/车型泛提及」57篇效率0.66x偏低，泛泛的车型/品牌负面提及传播力有限</li>
+      </ul>
+    </div>
+    <div style="display:grid;grid-template-columns:55% 45%;gap:16px;align-items:stretch;margin-bottom:20px;">
+      <div style="height:100%;">
+    <div id="wc_neg_container" style="background:#161b22;border:1px solid #21262d;border-radius:8px;padding:16px;overflow:hidden;display:flex;flex-direction:column;height:100%;min-height:420px;box-sizing:border-box;">
+      <div style="font-size:13px;color:#8a8a8a;margin-bottom:8px;">TOP 情绪标的词（字号已按绑定SPU数降权，减少多车横评笔记的视觉失真）</div>
+      <div style="font-size:10px;color:#8a8a8a;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#ffd166;margin-right:3px;vertical-align:middle;"></span>购买决策/纠结 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#a8dadc;margin-right:3px;vertical-align:middle;"></span>价格/权益 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#7ec8e8;margin-right:3px;vertical-align:middle;"></span>智能座舱 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#ef476f;margin-right:3px;vertical-align:middle;"></span>驾控/性能 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#f5854a;margin-right:3px;vertical-align:middle;"></span>品牌/车型泛提及 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#ef476f;margin-right:3px;vertical-align:middle;"></span>安全 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#a8dadc;margin-right:3px;vertical-align:middle;"></span>交付/服务 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#8ecae6;margin-right:3px;vertical-align:middle;"></span>市场/行业观察 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#ffd166;margin-right:3px;vertical-align:middle;"></span>空间/内饰 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#06d6a0;margin-right:3px;vertical-align:middle;"></span>智能驾驶 · <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#c77dff;margin-right:3px;vertical-align:middle;"></span>竞品对比</div>
+      <div style="flex:1;position:relative;min-height:0;" id="wc_neg_wrap">
+        <canvas id="wc_neg" style="width:100%;height:100%;display:block;"></canvas>
+        <div id="wc_neg_tooltip" style="display:none;position:absolute;background:#2d333b;border:1px solid #444;border-radius:6px;padding:8px 12px;font-size:12px;color:#e8e6e3;pointer-events:none;z-index:100;white-space:nowrap;"></div>
+      </div>
+      <div style="margin-top:10px;padding-top:8px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;opacity:0.7;">
+        * 情绪标的词：平台情绪模型识别出的、能触发用户特定情绪反应的内容主题单元。<b>字号按"阅读量÷该笔记绑定SPU数"排序</b>——多车横评笔记（如同时绑定5个车型）的视觉权重会相应降低。悬浮查看真实阅读量与降权后数值对比。
+      </div>
+    </div>
+    <script>
+    (function(){
+      const data = [{"text": "问界M6的购买决定", "size": 41, "color": "#ffd166", "notes": 1, "reads": 34249, "weighted_reads": 34249, "category": "购买决策/纠结"}, {"text": "问界M6购车决策", "size": 33, "color": "#ffd166", "notes": 1, "reads": 25695, "weighted_reads": 25695, "category": "购买决策/纠结"}, {"text": "问界M6的购车权益与提车时间", "size": 32, "color": "#a8dadc", "notes": 1, "reads": 24377, "weighted_reads": 24377, "category": "价格/权益"}, {"text": "车辆设计缺陷（如头枕不可拆卸、麦克风接口", "size": 31, "color": "#7ec8e8", "notes": 1, "reads": 24152, "weighted_reads": 24152, "category": "智能座舱"}, {"text": "销售未提前说明轮毂与续航关联", "size": 30, "color": "#ef476f", "notes": 1, "reads": 22207, "weighted_reads": 22207, "category": "驾控/性能"}, {"text": "上海车牌有效期与购车决策的关联性", "size": 29, "color": "#ffd166", "notes": 1, "reads": 21666, "weighted_reads": 21666, "category": "购买决策/纠结"}, {"text": "华为问界汽车的配置策略", "size": 26, "color": "#f5854a", "notes": 1, "reads": 18129, "weighted_reads": 18129, "category": "品牌/车型泛提及"}, {"text": "青、蓝、橙、紫、黑、白、银七种颜色的配色", "size": 25, "color": "#ffd166", "notes": 1, "reads": 16805, "weighted_reads": 16805, "category": "购买决策/纠结"}, {"text": "新车被代驾司机剐蹭的意外事件", "size": 24, "color": "#ef476f", "notes": 1, "reads": 15836, "weighted_reads": 15836, "category": "安全"}, {"text": "问界M6内饰配色选择", "size": 23, "color": "#ffd166", "notes": 1, "reads": 14848, "weighted_reads": 14848, "category": "购买决策/纠结"}, {"text": "购买纯电SUV的决策", "size": 23, "color": "#ffd166", "notes": 1, "reads": 14485, "weighted_reads": 14485, "category": "购买决策/纠结"}, {"text": "车辆智驾系统的安全可靠性", "size": 22, "color": "#7ec8e8", "notes": 1, "reads": 13585, "weighted_reads": 13585, "category": "智能座舱"}, {"text": "问界M6的购车选择", "size": 22, "color": "#ffd166", "notes": 1, "reads": 13395, "weighted_reads": 13395, "category": "购买决策/纠结"}, {"text": "夸问界好", "size": 21, "color": "#f5854a", "notes": 1, "reads": 12708, "weighted_reads": 12708, "category": "品牌/车型泛提及"}, {"text": "M6与M7两款车型的对比决策", "size": 21, "color": "#ffd166", "notes": 1, "reads": 25052, "weighted_reads": 12526, "category": "购买决策/纠结"}, {"text": "销售未提及的城区智驾收费及购车决策", "size": 21, "color": "#ffd166", "notes": 1, "reads": 12050, "weighted_reads": 12050, "category": "购买决策/纠结"}, {"text": "华为问界M6与理想L6的对比选择", "size": 19, "color": "#ffd166", "notes": 1, "reads": 21362, "weighted_reads": 10681, "category": "购买决策/纠结"}, {"text": "问界M6内饰设计、华子车无麦K歌付费功能", "size": 19, "color": "#7ec8e8", "notes": 1, "reads": 20583, "weighted_reads": 10292, "category": "智能座舱"}, {"text": "理想i6与问界M6的购车决策", "size": 19, "color": "#ffd166", "notes": 1, "reads": 19672, "weighted_reads": 9836, "category": "购买决策/纠结"}, {"text": "4S店销售谈判结果", "size": 18, "color": "#a8dadc", "notes": 1, "reads": 9360, "weighted_reads": 9360, "category": "交付/服务"}, {"text": "小米M6的最终选择与提车安排", "size": 18, "color": "#ffd166", "notes": 1, "reads": 18068, "weighted_reads": 9034, "category": "购买决策/纠结"}, {"text": "购车优惠活动", "size": 18, "color": "#a8dadc", "notes": 1, "reads": 8965, "weighted_reads": 8965, "category": "价格/权益"}, {"text": "成都订单店", "size": 18, "color": "#a8dadc", "notes": 1, "reads": 17507, "weighted_reads": 8754, "category": "交付/服务"}, {"text": "问界M6车型的购买决策", "size": 17, "color": "#ffd166", "notes": 1, "reads": 24098, "weighted_reads": 8033, "category": "购买决策/纠结"}, {"text": "问届M6的内饰材质与车机系统", "size": 17, "color": "#7ec8e8", "notes": 1, "reads": 7756, "weighted_reads": 7756, "category": "智能座舱"}, {"text": "手机市场竞争（折叠屏技术内卷现象）", "size": 16, "color": "#8ecae6", "notes": 1, "reads": 21853, "weighted_reads": 7284, "category": "市场/行业观察"}, {"text": "问界品牌与苹果手机的互联限制", "size": 16, "color": "#7ec8e8", "notes": 1, "reads": 7203, "weighted_reads": 7203, "category": "智能座舱"}, {"text": "M6车型", "size": 16, "color": "#f5854a", "notes": 1, "reads": 6875, "weighted_reads": 6875, "category": "品牌/车型泛提及"}, {"text": "颜色选择（紫色与蓝色的决策）", "size": 16, "color": "#ffd166", "notes": 1, "reads": 6444, "weighted_reads": 6444, "category": "购买决策/纠结"}, {"text": "问界M6与理想i6的购车决策", "size": 15, "color": "#ffd166", "notes": 3, "reads": 16218, "weighted_reads": 5483, "category": "购买决策/纠结"}, {"text": "四款车的选择", "size": 15, "color": "#ffd166", "notes": 1, "reads": 27331, "weighted_reads": 5466, "category": "购买决策/纠结"}, {"text": "价格及商品价值", "size": 15, "color": "#a8dadc", "notes": 1, "reads": 5192, "weighted_reads": 5192, "category": "价格/权益"}, {"text": "问界M6购车流程中的潜在风险", "size": 14, "color": "#ffd166", "notes": 1, "reads": 4376, "weighted_reads": 4376, "category": "购买决策/纠结"}, {"text": "车衣的防护效果", "size": 14, "color": "#ffd166", "notes": 1, "reads": 4253, "weighted_reads": 4253, "category": "空间/内饰"}, {"text": "腾势M6与M7的空间体验对比", "size": 14, "color": "#ffd166", "notes": 1, "reads": 12566, "weighted_reads": 4189, "category": "购买决策/纠结"}, {"text": "车辆选择", "size": 14, "color": "#ffd166", "notes": 1, "reads": 4159, "weighted_reads": 4159, "category": "购买决策/纠结"}, {"text": "问界M6的市场变化与技术更新", "size": 14, "color": "#8ecae6", "notes": 1, "reads": 4065, "weighted_reads": 4065, "category": "市场/行业观察"}, {"text": "问界M6", "size": 14, "color": "#f5854a", "notes": 5, "reads": 8629, "weighted_reads": 4016, "category": "品牌/车型泛提及"}, {"text": "问界M6的购买决策", "size": 13, "color": "#ffd166", "notes": 6, "reads": 6541, "weighted_reads": 3754, "category": "购买决策/纠结"}, {"text": "问界M6的激光雷达配置与智界R7的极光绿", "size": 13, "color": "#06d6a0", "notes": 1, "reads": 6973, "weighted_reads": 3486, "category": "智能驾驶"}, {"text": "雨天驾驶的安全风险", "size": 13, "color": "#ef476f", "notes": 1, "reads": 3474, "weighted_reads": 3474, "category": "安全"}, {"text": "华为的优惠政策", "size": 13, "color": "#a8dadc", "notes": 1, "reads": 3441, "weighted_reads": 3441, "category": "价格/权益"}, {"text": "智能驾驶技术（智驾）", "size": 13, "color": "#06d6a0", "notes": 1, "reads": 3209, "weighted_reads": 3209, "category": "智能驾驶"}, {"text": "选车决策（Model Y与问界M6的对比", "size": 13, "color": "#ffd166", "notes": 1, "reads": 3085, "weighted_reads": 3085, "category": "购买决策/纠结"}, {"text": "问界M6的年龄适配性", "size": 13, "color": "#f5854a", "notes": 1, "reads": 3006, "weighted_reads": 3006, "category": "品牌/车型泛提及"}, {"text": "问界M6内饰颜色选择", "size": 13, "color": "#ffd166", "notes": 1, "reads": 2916, "weighted_reads": 2916, "category": "购买决策/纠结"}, {"text": "M6车型的升级配置", "size": 13, "color": "#f5854a", "notes": 1, "reads": 8671, "weighted_reads": 2890, "category": "品牌/车型泛提及"}, {"text": "理想L7与问界M6的购车决策", "size": 13, "color": "#ffd166", "notes": 1, "reads": 5739, "weighted_reads": 2870, "category": "购买决策/纠结"}, {"text": "问界M6与岚图FREE+的购车决策", "size": 13, "color": "#ffd166", "notes": 3, "reads": 11444, "weighted_reads": 2861, "category": "购买决策/纠结"}, {"text": "岚图FREE+与问界M6的购车决策", "size": 13, "color": "#ffd166", "notes": 1, "reads": 11434, "weighted_reads": 2858, "category": "购买决策/纠结"}, {"text": "选择智界R7或等待问界M6的购车决策", "size": 12, "color": "#ffd166", "notes": 1, "reads": 8153, "weighted_reads": 2718, "category": "购买决策/纠结"}, {"text": "鸿蒙智行汽车销售及交付流程", "size": 12, "color": "#7ec8e8", "notes": 1, "reads": 2694, "weighted_reads": 2694, "category": "智能座舱"}, {"text": "问界M6的配置选择", "size": 12, "color": "#ffd166", "notes": 1, "reads": 2674, "weighted_reads": 2674, "category": "购买决策/纠结"}, {"text": "问界M6与特斯拉ModelY的购车选择", "size": 12, "color": "#ffd166", "notes": 1, "reads": 5329, "weighted_reads": 2664, "category": "购买决策/纠结"}, {"text": "尚界Z7/Z7T与问界M6的多版本车型选", "size": 12, "color": "#ffd166", "notes": 1, "reads": 7941, "weighted_reads": 2647, "category": "购买决策/纠结"}, {"text": "问界M6与智己LS8两款车型的购车决策", "size": 12, "color": "#ffd166", "notes": 1, "reads": 2561, "weighted_reads": 2561, "category": "购买决策/纠结"}, {"text": "车型选择（问界M6、尚界、阿维塔、岚图）", "size": 12, "color": "#ffd166", "notes": 1, "reads": 4875, "weighted_reads": 2438, "category": "购买决策/纠结"}, {"text": "M6与R7的车型选择", "size": 12, "color": "#ffd166", "notes": 1, "reads": 4728, "weighted_reads": 2364, "category": "购买决策/纠结"}, {"text": "车型购买决策（D19 vs 纯电 vs ", "size": 12, "color": "#ffd166", "notes": 1, "reads": 6902, "weighted_reads": 2301, "category": "购买决策/纠结"}, {"text": "问界M6的耗电量", "size": 12, "color": "#f5854a", "notes": 1, "reads": 2278, "weighted_reads": 2278, "category": "品牌/车型泛提及"}, {"text": "M6车型的定价与内饰设计、R7车型的品控", "size": 12, "color": "#a8dadc", "notes": 1, "reads": 6775, "weighted_reads": 2258, "category": "价格/权益"}, {"text": "新能源车企的定价策略", "size": 12, "color": "#a8dadc", "notes": 1, "reads": 6648, "weighted_reads": 2216, "category": "价格/权益"}, {"text": "问界M6与另一款未明确提及的车型", "size": 12, "color": "#f5854a", "notes": 1, "reads": 4329, "weighted_reads": 2164, "category": "品牌/车型泛提及"}, {"text": "车辆交付进度", "size": 12, "color": "#a8dadc", "notes": 1, "reads": 2114, "weighted_reads": 2114, "category": "交付/服务"}, {"text": "问界M6汽车", "size": 12, "color": "#f5854a", "notes": 1, "reads": 1954, "weighted_reads": 1954, "category": "品牌/车型泛提及"}, {"text": "三种购车金融方案", "size": 12, "color": "#a8dadc", "notes": 1, "reads": 1951, "weighted_reads": 1951, "category": "价格/权益"}, {"text": "市场竞争格局变化导致自身业务增长停滞", "size": 12, "color": "#8ecae6", "notes": 1, "reads": 7709, "weighted_reads": 1927, "category": "市场/行业观察"}, {"text": "两款车的选择", "size": 12, "color": "#ffd166", "notes": 1, "reads": 3835, "weighted_reads": 1918, "category": "购买决策/纠结"}, {"text": "某个选择或决定", "size": 12, "color": "#ffd166", "notes": 1, "reads": 1908, "weighted_reads": 1908, "category": "购买决策/纠结"}, {"text": "购车过程中的风险点（定金、贷款、保险、充", "size": 12, "color": "#a8dadc", "notes": 1, "reads": 3775, "weighted_reads": 1888, "category": "价格/权益"}, {"text": "汽车保险及延保服务的购买决策", "size": 12, "color": "#ffd166", "notes": 1, "reads": 1886, "weighted_reads": 1886, "category": "购买决策/纠结"}, {"text": "问界M6与岚图FREE+的购车选择", "size": 12, "color": "#ffd166", "notes": 2, "reads": 7320, "weighted_reads": 1830, "category": "购买决策/纠结"}, {"text": "问界家族四款车型的内饰选择", "size": 12, "color": "#ffd166", "notes": 1, "reads": 8964, "weighted_reads": 1793, "category": "购买决策/纠结"}, {"text": "问界M6与Model Y的车型选择", "size": 12, "color": "#ffd166", "notes": 1, "reads": 1789, "weighted_reads": 1789, "category": "购买决策/纠结"}, {"text": "m6产品的定价", "size": 12, "color": "#a8dadc", "notes": 1, "reads": 5326, "weighted_reads": 1775, "category": "价格/权益"}, {"text": "问界M6系列的市场竞争力", "size": 12, "color": "#8ecae6", "notes": 1, "reads": 1774, "weighted_reads": 1774, "category": "市场/行业观察"}, {"text": "问界M6在高原复杂路况下的续航表现", "size": 11, "color": "#ef476f", "notes": 1, "reads": 1723, "weighted_reads": 1723, "category": "驾控/性能"}, {"text": "M6车型的设计、用料和定价策略", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 5032, "weighted_reads": 1677, "category": "价格/权益"}, {"text": "汽车颜色和内饰选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1631, "weighted_reads": 1631, "category": "购买决策/纠结"}, {"text": "汽车购买决策（钛空银外观+紫慕白内饰的车", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1549, "weighted_reads": 1549, "category": "购买决策/纠结"}, {"text": "33万价位的AITO M6车型", "size": 11, "color": "#f5854a", "notes": 1, "reads": 1515, "weighted_reads": 1515, "category": "品牌/车型泛提及"}, {"text": "问界M6的销量及产品竞争力", "size": 11, "color": "#8ecae6", "notes": 1, "reads": 1508, "weighted_reads": 1508, "category": "市场/行业观察"}, {"text": "问界M6福利权益", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 1455, "weighted_reads": 1455, "category": "价格/权益"}, {"text": "购车决策中的财务风险", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1448, "weighted_reads": 1448, "category": "购买决策/纠结"}, {"text": "问界M6的购车决策", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2829, "weighted_reads": 1414, "category": "购买决策/纠结"}, {"text": "购车决策过程", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1399, "weighted_reads": 1399, "category": "购买决策/纠结"}, {"text": "问界M6的内饰设计", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1386, "weighted_reads": 1386, "category": "空间/内饰"}, {"text": "红色与橙色内饰的选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1379, "weighted_reads": 1379, "category": "购买决策/纠结"}, {"text": "车辆颜色（黑色/银色）与黑耀套件/20寸", "size": 11, "color": "#ef476f", "notes": 1, "reads": 1346, "weighted_reads": 1346, "category": "驾控/性能"}, {"text": "自助泊车系统发出的异常噪音", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 1324, "weighted_reads": 1324, "category": "智能座舱"}, {"text": "车辆的内饰设计", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2541, "weighted_reads": 1270, "category": "空间/内饰"}, {"text": "电动车的配置选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1246, "weighted_reads": 1246, "category": "购买决策/纠结"}, {"text": "问界M6的塑料材质、2026年组合、89", "size": 11, "color": "#f5854a", "notes": 1, "reads": 1239, "weighted_reads": 1239, "category": "品牌/车型泛提及"}, {"text": "岚图Free+/知音/追光S等车型的购车", "size": 11, "color": "#ffd166", "notes": 1, "reads": 8595, "weighted_reads": 1228, "category": "购买决策/纠结"}, {"text": "车企（问界品牌）", "size": 11, "color": "#f5854a", "notes": 1, "reads": 6000, "weighted_reads": 1200, "category": "品牌/车型泛提及"}, {"text": "华为问界M6的驾驶体验和产品设计", "size": 11, "color": "#f5854a", "notes": 1, "reads": 5914, "weighted_reads": 1183, "category": "品牌/车型泛提及"}, {"text": "问界M6的湖蓝色设计及品牌审美", "size": 11, "color": "#f5854a", "notes": 1, "reads": 1172, "weighted_reads": 1172, "category": "品牌/车型泛提及"}, {"text": "新能源车400V架构的市场现状", "size": 11, "color": "#8ecae6", "notes": 1, "reads": 1105, "weighted_reads": 1105, "category": "市场/行业观察"}, {"text": "问界m6和理想i6", "size": 11, "color": "#c77dff", "notes": 1, "reads": 2139, "weighted_reads": 1070, "category": "竞品对比"}, {"text": "岚图FREE+与问界M6的选车决策", "size": 11, "color": "#f5854a", "notes": 1, "reads": 4207, "weighted_reads": 1052, "category": "品牌/车型泛提及"}, {"text": "鸿蒙智行发布会现场情况", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 4101, "weighted_reads": 1025, "category": "智能座舱"}, {"text": "智界R7与问界M6的购车决策", "size": 11, "color": "#ffd166", "notes": 1, "reads": 5037, "weighted_reads": 1007, "category": "购买决策/纠结"}, {"text": "问界全系车型", "size": 11, "color": "#f5854a", "notes": 1, "reads": 4997, "weighted_reads": 999, "category": "品牌/车型泛提及"}, {"text": "鸿蒙智行与奥迪E7X的选择决策", "size": 11, "color": "#ffd166", "notes": 1, "reads": 3957, "weighted_reads": 989, "category": "购买决策/纠结"}, {"text": "问界M6和问界M7", "size": 11, "color": "#f5854a", "notes": 1, "reads": 1968, "weighted_reads": 984, "category": "品牌/车型泛提及"}, {"text": "问界M6的宣传策略", "size": 11, "color": "#f5854a", "notes": 1, "reads": 981, "weighted_reads": 981, "category": "品牌/车型泛提及"}, {"text": "问界M6的宣传与实际购车成本", "size": 11, "color": "#ffd166", "notes": 1, "reads": 955, "weighted_reads": 955, "category": "购买决策/纠结"}, {"text": "智己LS8与问界M6的购车决策", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2856, "weighted_reads": 952, "category": "购买决策/纠结"}, {"text": "他人对问界M6的负面评论和不实信息", "size": 11, "color": "#f5854a", "notes": 1, "reads": 949, "weighted_reads": 949, "category": "品牌/车型泛提及"}, {"text": "问界M6的内饰设计及产品定位", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1885, "weighted_reads": 942, "category": "空间/内饰"}, {"text": "问界M6的购车机会", "size": 11, "color": "#7ec8e8", "notes": 2, "reads": 936, "weighted_reads": 936, "category": "智能座舱"}, {"text": "车辆冷凝器被飞虫柳絮堵塞导致空调失效", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 2771, "weighted_reads": 924, "category": "智能座舱"}, {"text": "M6车型的购车机会", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 907, "weighted_reads": 907, "category": "智能座舱"}, {"text": "预售价格", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 903, "weighted_reads": 903, "category": "价格/权益"}, {"text": "小米与蔚小理（新能源汽车品牌）的竞争关系", "size": 11, "color": "#c77dff", "notes": 1, "reads": 881, "weighted_reads": 881, "category": "竞品对比"}, {"text": "华为M6的预售价格及购车权益", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 874, "weighted_reads": 874, "category": "价格/权益"}, {"text": "选择问界M6或M7的决策", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1747, "weighted_reads": 874, "category": "购买决策/纠结"}, {"text": "问界M6未配备220V插座的长期市场表现", "size": 11, "color": "#8ecae6", "notes": 1, "reads": 865, "weighted_reads": 865, "category": "市场/行业观察"}, {"text": "岚图FREE+与问界M6的购车选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 3453, "weighted_reads": 863, "category": "购买决策/纠结"}, {"text": "车外语音唤醒功能", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 844, "weighted_reads": 844, "category": "智能座舱"}, {"text": "M6设备的生产进度", "size": 11, "color": "#f5854a", "notes": 1, "reads": 841, "weighted_reads": 841, "category": "品牌/车型泛提及"}, {"text": "增程中配车型的定价策略", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 821, "weighted_reads": 821, "category": "价格/权益"}, {"text": "车机故障问题", "size": 11, "color": "#7ec8e8", "notes": 1, "reads": 2386, "weighted_reads": 795, "category": "智能座舱"}, {"text": "自动驾驶功能的使用选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1575, "weighted_reads": 788, "category": "购买决策/纠结"}, {"text": "车内摆件的安全隐患", "size": 11, "color": "#ef476f", "notes": 1, "reads": 1569, "weighted_reads": 784, "category": "安全"}, {"text": "问界M6与岚图FREE+的对比选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 3072, "weighted_reads": 768, "category": "购买决策/纠结"}, {"text": "问界M6的快速交付机会", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 759, "weighted_reads": 759, "category": "交付/服务"}, {"text": "问界M6的定价与续航表现", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 754, "weighted_reads": 754, "category": "价格/权益"}, {"text": "车辆选择决策", "size": 11, "color": "#ffd166", "notes": 2, "reads": 2160, "weighted_reads": 753, "category": "购买决策/纠结"}, {"text": "新阿维塔12与问界M6的购车决策", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1473, "weighted_reads": 736, "category": "购买决策/纠结"}, {"text": "问界M6在25万价位的市场竞争力", "size": 11, "color": "#8ecae6", "notes": 1, "reads": 706, "weighted_reads": 706, "category": "市场/行业观察"}, {"text": "问界M6与保时捷卡宴的相似性", "size": 11, "color": "#f5854a", "notes": 1, "reads": 690, "weighted_reads": 690, "category": "品牌/车型泛提及"}, {"text": "问界M6与岚图FREE+的选购决策", "size": 11, "color": "#ffd166", "notes": 2, "reads": 2712, "weighted_reads": 678, "category": "购买决策/纠结"}, {"text": "车衣选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 673, "weighted_reads": 673, "category": "购买决策/纠结"}, {"text": "小米SU7和问界M6", "size": 11, "color": "#c77dff", "notes": 1, "reads": 1344, "weighted_reads": 672, "category": "竞品对比"}, {"text": "多款汽车的试驾体验与购买决策", "size": 11, "color": "#ffd166", "notes": 1, "reads": 3330, "weighted_reads": 666, "category": "购买决策/纠结"}, {"text": "智界R7与问界M6两款车型的对比选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 2649, "weighted_reads": 662, "category": "购买决策/纠结"}, {"text": "选择电车与现有车辆的决策", "size": 11, "color": "#ffd166", "notes": 1, "reads": 1956, "weighted_reads": 652, "category": "购买决策/纠结"}, {"text": "问界M6的补贴政策、上海地区的购车优惠", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 1303, "weighted_reads": 652, "category": "价格/权益"}, {"text": "m6内饰颜色选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 651, "weighted_reads": 651, "category": "购买决策/纠结"}, {"text": "问界M6的等待过程", "size": 11, "color": "#f5854a", "notes": 1, "reads": 647, "weighted_reads": 647, "category": "品牌/车型泛提及"}, {"text": "问界汽车三月份政策调整及购车优惠", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 3217, "weighted_reads": 643, "category": "价格/权益"}, {"text": "问界M6的内饰颜色", "size": 11, "color": "#ffd166", "notes": 1, "reads": 643, "weighted_reads": 643, "category": "空间/内饰"}, {"text": "智界R7与问界M6的驾驶体验和操控性能", "size": 11, "color": "#ef476f", "notes": 1, "reads": 1260, "weighted_reads": 630, "category": "驾控/性能"}, {"text": "问界M6的潜在客户", "size": 11, "color": "#f5854a", "notes": 1, "reads": 624, "weighted_reads": 624, "category": "品牌/车型泛提及"}, {"text": "问界M6与岚图FREE+的选车决策", "size": 11, "color": "#f5854a", "notes": 1, "reads": 3110, "weighted_reads": 622, "category": "品牌/车型泛提及"}, {"text": "问界M6首销权益的优惠活动", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 621, "weighted_reads": 621, "category": "价格/权益"}, {"text": "问界M6的购车体验", "size": 11, "color": "#f5854a", "notes": 1, "reads": 6207, "weighted_reads": 621, "category": "品牌/车型泛提及"}, {"text": "小定与大定价格差异", "size": 11, "color": "#a8dadc", "notes": 1, "reads": 617, "weighted_reads": 617, "category": "价格/权益"}, {"text": "问界M6黑色与白色的选择", "size": 11, "color": "#ffd166", "notes": 1, "reads": 612, "weighted_reads": 612, "category": "购买决策/纠结"}];
+      const wrap = document.getElementById('wc_neg_wrap');
+      const canvas = document.getElementById('wc_neg');
+      const tooltip = document.getElementById('wc_neg_tooltip');
+      function render(){
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        if(w<10||h<10) return;
+        const dpr = window.devicePixelRatio||1;
+        canvas.width=w*dpr; canvas.height=h*dpr;
+        canvas.style.width=w+'px'; canvas.style.height=h+'px';
+        const ctx=canvas.getContext('2d');
+        ctx.clearRect(0,0,w,h); ctx.scale(dpr,dpr);
+        const placed=[], cx=w/2, cy=h/2, wordHits=[], padding=12;
+        function adjustSize(word){ ctx.font='bold '+word.size+'px sans-serif'; const ww=ctx.measureText(word.text).width, maxW=(w-padding*2)*0.95; return ww>maxW?Math.max(10,word.size*maxW/ww):word.size; }
+        function measureWord(text,size){ ctx.font='bold '+size+'px sans-serif'; const m=ctx.measureText(text); return {w:m.width+4,h:size*1.1+2}; }
+        function overlaps(nx,ny,nw,nh){ for(const p of placed){ if(Math.abs(nx-p.x)<(nw+p.w)/2+1&&Math.abs(ny-p.y)<(nh+p.h)/2+1) return true; } return false; }
+        function placeWord(word){
+          const size=adjustSize(word), dim=measureWord(word.text,size), sw=Object.assign({},word,{size});
+          if(!overlaps(cx,cy,dim.w,dim.h)){ placed.push({x:cx,y:cy,w:dim.w,h:dim.h,word:sw}); wordHits.push({x:cx-dim.w/2,y:cy-dim.h/2,w:dim.w,h:dim.h,word:sw}); return; }
+          let angle=Math.random()*Math.PI*2;
+          for(let step=0;step<4000;step++){
+            const r=4+step*0.25;
+            if(r>Math.max(w,h)*1.5) return;
+            const x=cx+r*Math.cos(angle), y=cy+r*Math.sin(angle);
+            if(x<dim.w/2+padding||x>w-dim.w/2-padding||y<dim.h/2+padding||y>h-dim.h/2-padding){ angle+=0.08; continue; }
+            if(!overlaps(x,y,dim.w,dim.h)){ placed.push({x,y,w:dim.w,h:dim.h,word:sw}); wordHits.push({x:x-dim.w/2,y:y-dim.h/2,w:dim.w,h:dim.h,word:sw}); return; }
+            angle+=0.08;
+          }
+        }
+        for(const word of data) placeWord(word);
+        for(const p of placed){ ctx.font='bold '+p.word.size+'px sans-serif'; ctx.fillStyle=p.word.color; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(p.word.text,p.x,p.y); }
+        canvas.onmousemove=(e)=>{
+          const rect=canvas.getBoundingClientRect(), mx=e.clientX-rect.left, my=e.clientY-rect.top;
+          let found=null;
+          for(const hit of wordHits){ if(mx>=hit.x&&mx<=hit.x+hit.w&&my>=hit.y&&my<=hit.y+hit.h){ found=hit.word; break; } }
+          if(found){ tooltip.style.display='block'; tooltip.style.left=(e.clientX-wrap.closest('[id$="_container"]').getBoundingClientRect().left+10)+'px'; tooltip.style.top=(e.clientY-wrap.closest('[id$="_container"]').getBoundingClientRect().top-10)+'px'; tooltip.innerHTML='<b>'+found.text+'</b><br>'+found.notes+'篇 · 真实阅读'+found.reads.toLocaleString()+'<br>降权后阅读'+found.weighted_reads.toLocaleString()+'（用于排序）<br>分类：'+found.category; }
+          else tooltip.style.display='none';
+        };
+        canvas.onmouseleave=()=>{ tooltip.style.display='none'; };
+      }
+      window.wordCloudRenders = window.wordCloudRenders || [];
+      window.wordCloudRenders.push(render);
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',render); else render();
+      window.addEventListener('resize',render);
+    })();
+    </script></div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">购买决策/纠结</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">182</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">571,861</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">3,142</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#e86550;">⚠️ 1.24x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">182篇（占消极侧41%）是体量最大的负面来源，效率1.24x高于均值——延续M7/M9同样规律，购车决策焦虑是汽车品类最大的负面来源</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">价格/权益</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">43</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">103,261</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">2,401</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">⚠️ 0.95x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">43篇效率0.95x接近均值</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">品牌/车型泛提及</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">57</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">95,924</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">1,683</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">❌ 0.66x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">57篇效率0.66x偏低，多为泛泛的车型/品牌负面提及</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">智能座舱</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">17</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">90,845</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">5,344</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#e86550;">✅ 2.11x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">17篇效率2.11x是消极侧效率最高，苹果手机互联限制等座舱互联体验反馈值得关注</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">市场/行业观察</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">14</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">41,434</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">2,960</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#e86550;">⚠️ 1.17x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">14篇效率1.17x</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">交付/服务</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">11</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">34,027</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">3,093</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#e86550;">⚠️ 1.22x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">11篇效率1.22x</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">驾控/性能</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">13</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">30,281</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">2,329</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">⚠️ 0.92x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">13篇效率0.92x接近均值</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">安全</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">5</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">22,399</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">4,480</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#e86550;">✅ 1.77x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">5篇效率1.77x，样本量很小结论仅供参考</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">空间/内饰</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">12</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">13,260</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">1,105</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">❌ 0.44x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">11篇效率0.32x明显偏低</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">智能驾驶</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">3</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">10,540</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">3,513</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#e86550;">⚠️ 1.39x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">3篇样本过小，效率数字仅供参考</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">竞品对比</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">14</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">9,547</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">682</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">❌ 0.27x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">14篇效率0.27x是消极侧最低</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #21262d;border-left:3px solid #e86550;border-radius:4px;padding:6px 10px;margin-bottom:6px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="min-width:88px;font-size:12px;font-weight:600;color:#e86550;">生活方式/家庭场景</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">笔记</div><div style="font-size:13px;font-weight:700;">1</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">总阅读</div><div style="font-size:13px;font-weight:700;">503</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">均阅读</div><div style="font-size:13px;font-weight:700;">503</div></div>
+              <div style="text-align:center;"><div style="font-size:9px;color:#8a8a8a;">效率</div><div style="font-size:13px;font-weight:700;color:#8a8a8a;">❌ 0.20x</div></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding-top:4px;border-top:1px solid #21262d;font-size:11px;color:#8a8a8a;line-height:1.6;">1个独立标的词</div>
+        </div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span style="color:#ffd166;">⚖️</span> 主力痛点 · 纠结感 — 主题聚合分析</div>
+    <div style="font-size:12px;color:#8a8a8a;margin-bottom:12px;">180 篇 / 均阅读2,672 / 降权效率0.99x — 消极侧体量最大情绪</div>
+    <div class="analysis" style="border-left-color:#ffd166;background:rgba(255,209,102,0.03);margin-bottom:14px;">
+      <div class="analysis-title" style="color:#ffd166;">💡 竞品/家族选择焦虑根因（基于真实主题聚合数据）</div>
+      <ul style="margin:0;padding-left:18px;">
+        <li>"购买决策/纠结"主题149篇，占纠结感总量<b>83%</b>——是绝对主导来源，效率1.10x略高于均值，占比集中度高于M7（60%），说明M6的负面情绪比M7更单一地集中在购车决策环节。</li>
+        <li>真实案例显示纠结感同样有两个来源：<b>家族内部选择</b>（"M6与M7两款车型的对比决策"）和<b>跨品牌对比</b>（"华为问界M6与理想L6的对比选择"、"问界M6与理想i6的购车决策"）——理想系是M6用户决策链条中最常出现的竞品。</li>
+        <li>"品牌/车型泛提及"18篇效率仅0.42x明显偏低，简单的"怎么选"提问帖效率明显低于系统化对比内容，与M7报告发现的规律完全一致。</li>
+      </ul>
+    </div>
+    <table>
+      <thead><tr><th>主题</th><th style="text-align:center;">笔记数</th><th style="text-align:right;">均阅读</th><th style="text-align:right;">效率</th><th>内容方向（📊数据规律 / 💡推断建议）</th><th>真实TOP笔记</th></tr></thead>
+      <tbody><tr>
+      <td style="font-weight:600;">购买决策/纠结</td>
+      <td style="text-align:center;">149</td>
+      <td style="text-align:right;">2,931</td>
+      <td style="text-align:right;color:#ffd166;font-weight:600;">1.10x</td>
+      <td style="font-size:12px;">📊 149篇（83%）是绝对主导来源，效率1.10x略高于均值，TOP案例"四款车的选择"（2.7万阅读，绑定5个SPU，真实多车对比场景）——纠结感的核心驱动力是购车决策焦虑，与M7/M9呈现的规律完全一致<br><span style="opacity:0.75;">💡 建议做"问界M6 vs 同价位竞品"系统横评内容，回应真实的决策焦虑</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69ed840b000000001b0226f5" target="_blank" style="color:#7ec8e8;text-decoration:none;">四款车的选择（27,331阅读,spu=5）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">品牌/车型泛提及</td>
+      <td style="text-align:center;">18</td>
+      <td style="text-align:right;">1,111</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.42x</td>
+      <td style="font-size:12px;">📊 18篇效率仅0.42x明显偏低，TOP案例"问界全系车型"（4,997阅读，绑定5个SPU）——泛泛的车型提及型纠结内容传播力不足<br><span style="opacity:0.75;">💡 简单的"怎么选"提问帖效率明显低于系统化对比内容，与M7报告发现的规律一致</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69831214000000001a02006d" target="_blank" style="color:#7ec8e8;text-decoration:none;">问界全系车型（4,997阅读,spu=5）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">价格/权益</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">3,572</td>
+      <td style="text-align:right;color:#ffd166;font-weight:600;">1.34x</td>
+      <td style="font-size:12px;">📊 仅2篇效率1.34x较高，TOP案例"价格及商品价值"（5,192阅读，单SPU纯净）——价格纠结类内容传播效率不错但样本太小<br><span style="opacity:0.75;">💡 样本仅2篇，方向可关注但不构成确定性趋势</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e8c56b000000001d01aabe" target="_blank" style="color:#7ec8e8;text-decoration:none;">价格及商品价值（5,192阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">外观/颜值</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">470</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.18x</td>
+      <td style="font-size:12px;">📊 仅2篇效率0.18x明显偏低，TOP案例"汽车配置与外观选项"（503阅读，单SPU）<br><span style="opacity:0.75;">💡 样本太小且效率低，不建议作为主力方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69eb527c0000000038035983" target="_blank" style="color:#7ec8e8;text-decoration:none;">汽车配置与外观选项（503阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">交付/购车</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">294</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.11x</td>
+      <td style="font-size:12px;">📊 仅2篇效率0.11x是纠结感里效率最低的主题，TOP案例"车辆试驾体验与产品参数的落差"（504阅读，单SPU）——反映试驾体验与参数宣传存在落差感<br><span style="opacity:0.75;">💡 样本太小，但"体验与参数落差"这个具体反馈点值得留意</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e0428a000000002103a948" target="_blank" style="color:#7ec8e8;text-decoration:none;">车辆试驾体验与产品参数的落差（504阅读）↗</a></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span style="color:#ffd166;">😟</span> 担心感 — 主题聚合分析</div>
+    <div style="font-size:12px;color:#8a8a8a;margin-bottom:12px;">72 篇 / 均阅读1,852（降权后） / 降权效率1.29x — 消极侧第二大情绪</div>
+    <div class="analysis" style="border-left-color:#ffd166;background:rgba(255,209,102,0.03);margin-bottom:14px;">
+      <div class="analysis-title" style="color:#ffd166;">💡 担心感四类真实焦虑（基于真实主题聚合数据）</div>
+      <ul style="margin:0;padding-left:18px;">
+        <li>"产品设计缺陷"3篇效率4.52x全场最高，TOP案例"车辆设计缺陷（如头枕不可拆卸、麦克风接口取消）"单篇2.4万阅读——这是真实产品反馈，内容层面无法"消除"，建议原样上报产品侧，不建议用内容掩盖。</li>
+        <li>"安全性焦虑"4篇效率2.97x较高，TOP案例"车辆智能驾驶系统的安全可靠性"（1.4万阅读，单SPU纯净）——建议用真实场景智驾长测内容替代参数宣传，用实际体验建立信任。</li>
+        <li>"购买决策/纠结"12篇效率2.01x高于均值，TOP案例"上海车牌有效期与购车决策的关联性"（2.2万阅读）——牌照政策/购车时机类决策焦虑传播力强，建议提前科普相关政策。</li>
+        <li>"品牌/车型泛提及"24篇（33%）是最大来源但效率仅0.45x明显偏低，多为泛泛的成本/价值疑虑，缺乏具体解答内容。</li>
+      </ul>
+    </div>
+    <table>
+      <thead><tr><th>主题</th><th style="text-align:center;">笔记数</th><th style="text-align:right;">均阅读</th><th style="text-align:right;">效率</th><th>内容方向（📊数据规律 / 💡推断建议）</th><th>真实TOP笔记</th></tr></thead>
+      <tbody><tr>
+      <td style="font-weight:600;">购买决策/纠结</td>
+      <td style="text-align:center;">12</td>
+      <td style="text-align:right;">3,718</td>
+      <td style="text-align:right;color:#e86550;font-weight:600;">2.01x</td>
+      <td style="font-size:12px;">📊 12篇效率2.01x（降权后）明显高于均值，TOP案例"上海车牌有效期与购车决策的关联性"（21,666阅读，单SPU纯净）——牌照政策/落地时机等决策焦虑传播力强<br><span style="opacity:0.75;">💡 建议提前科普牌照政策与购车时机的关系，帮助用户建立决策信心</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/699ff2d2000000001a02143e" target="_blank" style="color:#7ec8e8;text-decoration:none;">上海车牌有效期与购车决策的关联性（21,666阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">品牌/车型泛提及</td>
+      <td style="text-align:center;">24</td>
+      <td style="text-align:right;">824</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.45x</td>
+      <td style="font-size:12px;">📊 24篇（33%）是最大来源，但效率仅0.45x明显偏低，TOP案例"问界M6的购车成本与价值匹配度"（4,631阅读，绑定11个SPU）——多SPU横评内容拉低了真实性<br><span style="opacity:0.75;">💡 该主题体量大但效率不突出，多是泛泛的成本/价值疑虑，缺乏具体解答内容</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e35965000000001a033f92" target="_blank" style="color:#7ec8e8;text-decoration:none;">问界M6的购车成本与价值匹配度（4,631阅读,spu=11）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">产品设计缺陷</td>
+      <td style="text-align:center;">3</td>
+      <td style="text-align:right;">8,372</td>
+      <td style="text-align:right;color:#e86550;font-weight:600;">4.52x</td>
+      <td style="font-size:12px;">📊 3篇效率4.52x全场最高，TOP案例"车辆设计缺陷（如头枕不可拆卸、麦克风接口取消）"（24,152阅读，单SPU纯净）——真实的产品反馈类投诉传播力最强<br><span style="opacity:0.75;">💡 这是真实产品意见反馈，内容层面无法"消除"，建议原样上报产品侧，不建议用内容掩盖</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69f32139000000003502a0c2" target="_blank" style="color:#7ec8e8;text-decoration:none;">车辆设计缺陷（如头枕不可拆卸、麦克风接口取消...（24,152阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">其他</td>
+      <td style="text-align:center;">16</td>
+      <td style="text-align:right;">931</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.50x</td>
+      <td style="font-size:12px;">📊 16篇（22%）分散在使用体验/购车方式/驾驶安全/身体健康等长尾话题，无法归为单一主题（如"车内摆件的安全隐患"1,569阅读、"孕妇及胎儿的健康风险"308阅读），已抽样核实均为真实碎片化内容<br><span style="opacity:0.75;">💡 长尾分散，不构成可执行的内容方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e38c09000000001b023493" target="_blank" style="color:#7ec8e8;text-decoration:none;">新能源车企的定价策略（6,648阅读,spu=3）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">安全性焦虑</td>
+      <td style="text-align:center;">4</td>
+      <td style="text-align:right;">5,498</td>
+      <td style="text-align:right;color:#e86550;font-weight:600;">2.97x</td>
+      <td style="font-size:12px;">📊 4篇效率2.97x较高，TOP案例"车辆智能驾驶系统的安全可靠性"（13,585阅读，单SPU纯净）——智驾安全信任是真实高传播焦虑点<br><span style="opacity:0.75;">💡 建议用真实场景智驾长测内容替代参数宣传，用实际体验建立信任</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/6a0ee616000000000803f768" target="_blank" style="color:#7ec8e8;text-decoration:none;">车辆智驾系统的安全可靠性（13,585阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">购车交易风险</td>
+      <td style="text-align:center;">4</td>
+      <td style="text-align:right;">1,230</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.66x</td>
+      <td style="font-size:12px;">📊 4篇效率0.66x略低于均值，TOP案例"购车过程中的风险点（定金、贷款、保险、充电桩、补贴、上牌费）"（3,775阅读，绑定2个SPU）<br><span style="opacity:0.75;">💡 建议做"购车全流程避坑清单"，把定金/贷款/保险/上牌等环节讲透，减少信息不对称</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69edcb3c000000001a037792" target="_blank" style="color:#7ec8e8;text-decoration:none;">购车过程中的风险点（定金、贷款、保险、充电桩...（3,775阅读,spu=2）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">竞品对比</td>
+      <td style="text-align:center;">3</td>
+      <td style="text-align:right;">313</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.17x</td>
+      <td style="font-size:12px;">📊 3篇效率0.17x明显偏低，TOP案例"理想i6的市场表现和定价策略"（1,632阅读，绑定5个SPU）——多SPU竞品定价类内容传播力弱<br><span style="opacity:0.75;">💡 样本小且效率低，不建议作为主力方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69be15df000000001a033759" target="_blank" style="color:#7ec8e8;text-decoration:none;">理想i6的市场表现和定价策略（1,632阅读,spu=5）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">销量/行业资讯</td>
+      <td style="text-align:center;">4</td>
+      <td style="text-align:right;">137</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.07x</td>
+      <td style="font-size:12px;">📊 4篇效率仅0.07x是担心感里效率最低的主题，TOP案例"赛力斯的市场表现与未来前景"（498阅读，绑定5个SPU）——泛行业观察类内容传播力极弱<br><span style="opacity:0.75;">💡 不建议作为主力方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69cb9ee300000000210071be" target="_blank" style="color:#7ec8e8;text-decoration:none;">赛力斯的市场表现与未来前景（498阅读,spu=5）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">驾控/性能</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">386</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.21x</td>
+      <td style="font-size:12px;">📊(样本小) 1篇效率0.21x偏低，"买纯电车的续航问题"（772阅读，绑定2个SPU）<br><span style="opacity:0.75;">💡 样本仅1篇，不构成趋势</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/696c707a000000000a029bb6" target="_blank" style="color:#7ec8e8;text-decoration:none;">买纯电车的续航问题（772阅读,spu=2）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">交付/购车</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">143</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.08x</td>
+      <td style="font-size:12px;">📊(样本小) 1篇效率0.08x是担心感里效率最低的主题，"购车权益截止和试驾车辆紧张"（143阅读，单SPU纯净）<br><span style="opacity:0.75;">💡 样本仅1篇，不构成趋势</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e6f2c700000000230130b8" target="_blank" style="color:#7ec8e8;text-decoration:none;">购车权益截止和试驾车辆紧张（143阅读）↗</a></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span style="color:#e86550;">📢</span> 高传播舆情 · 遗憾 — 主题聚合分析</div>
+    <div style="font-size:12px;color:#8a8a8a;margin-bottom:12px;">31 篇 / 均阅读3,712 / 降权效率2.21x</div>
+    <div class="analysis" style="border-left-color:#e86550;background:rgba(232,101,80,0.03);margin-bottom:14px;">
+      <div class="analysis-title" style="color:#e86550;">💡 说明（真实信号：销售端信息透明度问题）</div>
+      <ul style="margin:0;padding-left:18px;">
+        <li>TOP1案例"问界M6的购买决定"（3.4万阅读，单SPU纯净）是购车决定后的反思/遗憾类内容，具体指向需要点开笔记核实。</li>
+        <li>TOP2案例"销售未提前说明轮毂与续航关联"（2.2万阅读，单SPU纯净，效率5.98x全场最高）——真实的销售信息不透明投诉，指向"轮毂选择会影响续航"这一具体技术细节的销售端告知缺失。</li>
+        <li>另一真实案例"销售未提及的城区智驾收费及购车决策"（1.2万阅读）反映智驾功能收费政策的销售端沟通不充分——这是需要产品/销售团队关注的具体信息差问题，不是产品质量问题。</li>
+      </ul>
+    </div>
+    <table>
+      <thead><tr><th>主题</th><th style="text-align:center;">笔记数</th><th style="text-align:right;">均阅读</th><th style="text-align:right;">效率</th><th>内容方向（📊数据规律 / 💡推断建议）</th><th>真实TOP笔记</th></tr></thead>
+      <tbody><tr>
+      <td style="font-weight:600;">品牌/车型泛提及</td>
+      <td style="text-align:center;">7</td>
+      <td style="text-align:right;">7,754</td>
+      <td style="text-align:right;color:#e86550;font-weight:600;">2.09x</td>
+      <td style="font-size:12px;">📊 7篇效率2.09x较高，TOP案例"问界M6的购买决定"单篇3.4万阅读（单SPU纯净）——真实的购车决定后遗憾/反思类内容传播力强<br><span style="opacity:0.75;">💡 需要核实这篇高传播内容具体指向什么遗憾点，可能反映真实决策后的心理落差</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69e8d6e5000000002202b90e" target="_blank" style="color:#7ec8e8;text-decoration:none;">问界M6的购买决定（34,249阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">交付/购车</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">22,207</td>
+      <td style="text-align:right;color:#e86550;font-weight:600;">5.98x</td>
+      <td style="font-size:12px;">📊 1篇效率5.98x全场最高，"销售未提前说明轮毂与续航关联"单篇2.2万阅读（单SPU纯净）——真实的销售信息不透明投诉，指向具体产品知识普及缺口<br><span style="opacity:0.75;">💡 建议加强销售端对"轮毂选择影响续航"这类技术细节的告知，避免购车后的信息差遗憾</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69ee023d00000000200390e9" target="_blank" style="color:#7ec8e8;text-decoration:none;">销售未提前说明轮毂与续航关联（22,207阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">购买决策/纠结</td>
+      <td style="text-align:center;">10</td>
+      <td style="text-align:right;">1,763</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.47x</td>
+      <td style="font-size:12px;">📊 10篇效率0.47x偏低，TOP案例"销售未提及的城区智驾收费及购车决策"（1.2万阅读）——涉及智驾功能收费透明度的真实投诉<br><span style="opacity:0.75;">💡 建议核实智驾功能收费政策的销售端沟通是否充分</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69c880a2000000001d01f725" target="_blank" style="color:#7ec8e8;text-decoration:none;">销售未提及的城区智驾收费及购车决策（12,050阅读）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">销量/行业资讯</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">4,407</td>
+      <td style="text-align:right;color:#ffd166;font-weight:600;">1.19x</td>
+      <td style="font-size:12px;">📊 仅2篇效率1.19x，TOP案例"市场竞争格局变化导致自身业务增长停滞"（7,709阅读，绑定4个SPU）——多SPU行业观察内容<br><span style="opacity:0.75;">💡 样本太小，且内容偏行业大盘观察，不构成产品侧具体行动依据</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/6a44b8bb0000000008003dbe" target="_blank" style="color:#7ec8e8;text-decoration:none;">市场竞争格局变化导致自身业务增长停滞（7,709阅读,spu=4）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">外观/颜值</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">1,836</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.49x</td>
+      <td style="font-size:12px;">📊 仅2篇效率0.49x，TOP案例"车辆的内饰设计"（2,541阅读，绑定2个SPU）<br><span style="opacity:0.75;">💡 样本太小，不构成趋势</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69ca42f5000000001e00de06" target="_blank" style="color:#7ec8e8;text-decoration:none;">车辆的内饰设计（2,541阅读,spu=2）↗</a></td>
+    </tr><tr>
+      <td style="font-weight:600;">价格/权益</td>
+      <td style="text-align:center;">4</td>
+      <td style="text-align:right;">492</td>
+      <td style="text-align:right;color:#8a8a8a;font-weight:600;">0.13x</td>
+      <td style="font-size:12px;">📊 4篇效率仅0.13x是遗憾情绪里效率最低的主题，TOP案例"预售价格"（903阅读，单SPU）<br><span style="opacity:0.75;">💡 价格类遗憾内容当前传播力很低，不建议作为主力方向</span></td>
+      <td style="font-size:12px;"><a href="https://www.xiaohongshu.com/explore/69c10d88000000001a022894" target="_blank" style="color:#7ec8e8;text-decoration:none;">预售价格（903阅读）↗</a></td>
+    </tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="tab-content" id="tab3">
+  <div class="card">
+    <div class="card-title"><span class="icon">◆</span> 四象限内容策略矩阵</div>
+    <div class="strategy-grid" style="margin-bottom:18px;">
+      <div style="background:#f5854a1a;border:1px solid #f5854a4d;border-radius:12px;padding:20px;">
+        <div style="font-size:14px;color:#f5854a;font-weight:600;margin-bottom:10px;">🟢 放大区（高效率内容）</div>
+        <div style="font-size:12px;color:#e8e6e3;line-height:1.7;margin-bottom:10px;"><strong>方向</strong>：成就感（提车/交付达成叙事） · 愉悦（配色/座舱设计） · 智能驾驶/驾控实测<br><strong>对策</strong>：加大真实车主提车/交付分享，M6的多彩配色体系是差异化视觉资产，建议持续产出配色种草内容。</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;font-size:11px;color:#8a8a8a;">
+          <div style="color:#f5854a;font-weight:600;margin-bottom:6px;">💡 内容参考选题（推断性建议）</div>
+          「问界M6提车这天」真实车主分享 · 「7种配色到底怎么选」配色种草合集 · 「问界M6遥控泊车实测」
+        </div>
+      </div>
+      <div style="background:#7ec8e814;border:1px solid #7ec8e84d;border-radius:12px;padding:20px;">
+        <div style="font-size:14px;color:#7ec8e8;font-weight:600;margin-bottom:10px;">🟡 填补区（高效率，供给不足）</div>
+        <div style="font-size:12px;color:#e8e6e3;line-height:1.7;margin-bottom:10px;"><strong>方向</strong>：<b style="color:#06d6a0">灵感橱窗</b>（44篇真实笔记，93%积极valence，93%单SPU纯净，但整体效率仅0.62x） · 空间/内饰特色配置（手办展示柜/220V插座） · 智能座舱互联体验<br><strong>对策</strong>：灵感橱窗是已验证有真实体量、口碑纯正的M6专属资产，但当前内容多停留在"好看/有意思"表层描述，效率没跑出来——数据显示"期待感"角度（磁吸生态未来可拓展性）效率1.25x是唯一跑赢均值的方向，建议从"展示功能"升级为"展示可玩法/可拓展性"；M6特色的空间设计效率1.42x较高但供给不算多（125篇），值得加码；智能座舱互联（苹果手机互联限制等）当前是消极侧信号，转化为教程类正向内容有机会填补空白。</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;font-size:11px;color:#8a8a8a;">
+          <div style="color:#7ec8e8;font-weight:600;margin-bottom:6px;">💡 内容参考选题（推断性建议）</div>
+          「灵感橱窗还能这样玩」磁吸配件延展性实测（非单纯展示） · 「M6的隐藏储物空间大揭秘」（手办展示柜/220V插座实测） · 「iPhone怎么连问界M6」互联教程
+        </div>
+      </div>
+    </div>
+    <div class="strategy-grid" style="margin-bottom:18px;">
+      <div style="background:#e8655014;border:1px solid #e865504d;border-radius:12px;padding:20px;">
+        <div style="font-size:14px;color:#e86550;font-weight:600;margin-bottom:10px;">🔴 关注区（真实信息透明度问题）</div>
+        <div style="font-size:12px;color:#e8e6e3;line-height:1.7;margin-bottom:10px;"><strong>方向</strong>：销售未提前说明轮毂与续航关联（2.2万阅读） · 智驾城区收费政策告知不充分<br><strong>对策</strong>：这不是产品质量问题，是销售端信息透明度问题——建议加强4S店销售培训，购车前主动告知轮毂选择对续航的影响、智驾功能的收费边界。</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;font-size:11px;color:#8a8a8a;">
+          <div style="color:#e86550;font-weight:600;margin-bottom:6px;">💡 建议动作</div>
+          制作"轮毂选择对续航的真实影响"科普内容主动澄清 · 核实智驾收费政策的销售端沟通话术是否需要标准化 · 核实"问界M6的购买决定"这篇高传播遗憾内容的具体指向
+        </div>
+      </div>
+      <div style="background:#ffd16614;border:1px solid #ffd1664d;border-radius:12px;padding:20px;">
+        <div style="font-size:14px;color:#ffd166;font-weight:600;margin-bottom:10px;">🔵 疏导区（购车决策焦虑）</div>
+        <div style="font-size:12px;color:#e8e6e3;line-height:1.7;margin-bottom:10px;"><strong>方向</strong>：纠结感（家族内部M6/M7选择 + 理想L6/理想i6跨品牌对比）<br><strong>对策</strong>：179篇体量最大的负面来源，83%集中在购车决策，占比集中度高于M7，理想系是最常出现的竞品，建议重点应对。</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;font-size:11px;color:#8a8a8a;">
+          <div style="color:#ffd166;font-weight:600;margin-bottom:6px;">💡 内容参考选题（推断性建议）</div>
+          「问界M6 vs M7：一张图讲清定位差异」 · 「问界M6 vs 理想L6/i6：25万级怎么选」客观横评
+        </div>
+      </div>
+    </div>
+    <div class="summary-box">
+      <h3 style="font-size:14px;color:#f5854a;margin-bottom:8px;font-weight:600;">📋 行动优先级清单</h3>
+      <ol style="padding-left:18px;font-size:13px;color:#e8e6e3;opacity:0.9;line-height:1.8;">
+        <li><b>P0</b>：《销售未提前说明轮毂与续航关联》（2.2万阅读，效率全场最高5.98x）反映真实销售信息不透明——建议尽快出一条"轮毂选择对续航影响"的科普内容，并核实4S店销售话术是否需要更新。</li>
+        <li><b>P1</b>：针对"纠结感"购车决策焦虑（179篇消极侧最大来源，83%集中在决策环节），重点制作"M6 vs M7家族定位"和"M6 vs 理想L6/i6"两类对比内容。</li>
+        <li><b>P2</b>：核实智驾城区收费政策的销售端沟通是否充分，评估是否需要标准化话术或购车前提示流程。</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="icon">◆</span> 数据局限说明（如实披露）</div>
+    <div class="analysis" style="border-left-color:#8a8a8a;background:rgba(138,138,138,0.05);">
+      <div class="analysis-title" style="color:#8a8a8a;">⚠️ 本报告的数据边界</div>
+      <ul style="margin:0;padding-left:18px;">
+        <li>数据来源：RedBI看板导出的1,680篇笔记（SPU_NAME=AITO问界M6，2026年5-7月），反查DOR主表补充标的词/情绪/效价/SPU绑定数字段（1,662/1,680篇精确匹配，98.9%）；清理"提到其他具体车型（M5/M7/M8/M9/尚界/享界/尊界/智界）但未提M6"的68篇误入笔记，最终有效分析基数为1,594篇（有效valence）。</li>
+        <li><b>样本规模提醒</b>：总体1,594篇尚可支撑积极/消极大盘分析，但部分细分情绪样本极小（如成就感19篇、愉悦6篇、遗憾31篇），解读时务必参考文中标注的样本量警示，不宜将小样本结论直接等同于大盘规律。</li>
+        <li>多SPU笔记与词云降权：经排查发现"接纳感"（13篇，原始效率3.60x）和"信念感"（4篇，原始效率4.36x）两个情绪的TOP1笔记分别绑定7个和11个SPU的多车横评内容，降权后效率分别降至1.46x和1.75x——已改用真正的单SPU纯净驱动的"成就感"（降权2.58x）和"愉悦"（降权3.51x）作为明星/高潜情绪深度模块，避免被多SPU笔记撑起的伪高效信号误导。</li>
+        <li>标的词覆盖：积极侧972个、消极侧419个不重复标的词，经关键词归并后"其他"占比积极侧12.1%（129篇）、消极侧16.2%（72篇），与M7报告最终版本水平接近。</li>
+        <li>本报告未做本品与竞品的交叉验证，如需要可另行补充。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+function switchTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===idx));
+  setTimeout(()=>{
+    charts.forEach(c=>c&&c.resize());
+    (window.wordCloudRenders||[]).forEach(r=>r&&r());
+  },100);
+}
+const charts=[];
+</script>
+
+<script>
+(function(){
+  const chart=echarts.init(document.getElementById('chart-sub-pos'));
+  charts.push(chart);
+  const data=[{"name": "欣赏感", "pct": 38.8}, {"name": "期待感", "pct": 26.1}, {"name": "惊喜", "pct": 7.9}, {"name": "畅爽", "pct": 4.2}, {"name": "知足感", "pct": 4.1}, {"name": "启迪感", "pct": 3.6}, {"name": "成就感", "pct": 1.8}, {"name": "放心感", "pct": 1.5}, {"name": "钦佩感", "pct": 1.3}, {"name": "接纳感", "pct": 1.2}];
+  chart.setOption({title:{text:'积极情绪 TOP10',left:'center',textStyle:{color:'#e8e6e3',fontSize:13,fontWeight:500}},tooltip:{trigger:'axis',axisPointer:{type:'shadow'},formatter:p=>p[0].name+'<br>占比: '+p[0].value.toFixed(1)+'%'},grid:{top:28,right:48,bottom:18,left:72},xAxis:{type:'value',name:'占比%',nameTextStyle:{color:'#8a8a8a',fontSize:10},axisLabel:{color:'#8a8a8a',fontSize:10,formatter:'{value}%'},splitLine:{lineStyle:{color:'#1c2128'}}},yAxis:{type:'category',data:data.map(d=>d.name).reverse(),axisLabel:{color:'#e8e6e3',fontSize:10},axisLine:{show:false}},series:[{type:'bar',data:data.map(d=>d.pct).reverse(),itemStyle:{color:'#f5854a'},barWidth:14,label:{show:true,position:'right',color:'#8a8a8a',fontSize:10,formatter:p=>p.value.toFixed(1)+'%'}}]});
+})();
+(function(){
+  const chart=echarts.init(document.getElementById('chart-sub-neg'));
+  charts.push(chart);
+  const data=[{"name": "纠结感", "pct": 40.3}, {"name": "担心感", "pct": 16.2}, {"name": "急迫感", "pct": 8.6}, {"name": "遗憾", "pct": 7.0}, {"name": "失望", "pct": 6.5}, {"name": "无奈", "pct": 6.3}, {"name": "反感", "pct": 4.5}, {"name": "困惑感", "pct": 3.6}, {"name": "怀疑感", "pct": 1.6}, {"name": "挫败感", "pct": 1.4}];
+  chart.setOption({title:{text:'消极情绪 TOP10',left:'center',textStyle:{color:'#e8e6e3',fontSize:13,fontWeight:500}},tooltip:{trigger:'axis',axisPointer:{type:'shadow'},formatter:p=>p[0].name+'<br>占比: '+p[0].value.toFixed(1)+'%'},grid:{top:28,right:48,bottom:18,left:72},xAxis:{type:'value',name:'占比%',nameTextStyle:{color:'#8a8a8a',fontSize:10},axisLabel:{color:'#8a8a8a',fontSize:10,formatter:'{value}%'},splitLine:{lineStyle:{color:'#1c2128'}}},yAxis:{type:'category',data:data.map(d=>d.name).reverse(),axisLabel:{color:'#e8e6e3',fontSize:10},axisLine:{show:false}},series:[{type:'bar',data:data.map(d=>d.pct).reverse(),itemStyle:{color:'#e86550'},barWidth:14,label:{show:true,position:'right',color:'#8a8a8a',fontSize:10,formatter:p=>p.value.toFixed(1)+'%'}}]});
+})();
+(function(){
+  const chart=echarts.init(document.getElementById('chart-efficiency'));
+  charts.push(chart);
+  const KEY=["欣赏感", "期待感", "纠结感", "担心感", "成就感", "愉悦", "遗憾"];
+  const allSub=[{"name": "欣赏感", "value": [414, 1454, 945058], "itemStyle": {"color": "#f5854a"}}, {"name": "期待感", "value": [278, 870, 475189], "itemStyle": {"color": "#f5854a"}}, {"name": "惊喜", "value": [84, 1811, 162137], "itemStyle": {"color": "#f5854a"}}, {"name": "畅爽", "value": [45, 1017, 60862], "itemStyle": {"color": "#f5854a"}}, {"name": "知足感", "value": [44, 1936, 158639], "itemStyle": {"color": "#f5854a"}}, {"name": "启迪感", "value": [38, 1446, 70567], "itemStyle": {"color": "#f5854a"}}, {"name": "成就感", "value": [19, 3713, 85757], "itemStyle": {"color": "#f5854a"}}, {"name": "放心感", "value": [16, 810, 18187], "itemStyle": {"color": "#f5854a"}}, {"name": "钦佩感", "value": [14, 785, 24974], "itemStyle": {"color": "#f5854a"}}, {"name": "接纳感", "value": [13, 2091, 107763], "itemStyle": {"color": "#f5854a"}}, {"name": "好感", "value": [13, 1358, 19736], "itemStyle": {"color": "#f5854a"}}, {"name": "掌控感", "value": [12, 726, 10704], "itemStyle": {"color": "#f5854a"}}, {"name": "信赖感", "value": [9, 738, 12015], "itemStyle": {"color": "#f5854a"}}, {"name": "解脱感", "value": [8, 999, 10239], "itemStyle": {"color": "#f5854a"}}, {"name": "逗趣感", "value": [7, 700, 5302], "itemStyle": {"color": "#f5854a"}}, {"name": "愉悦", "value": [6, 4263, 26876], "itemStyle": {"color": "#f5854a"}}, {"name": "欣慰", "value": [6, 1581, 12372], "itemStyle": {"color": "#f5854a"}}, {"name": "归属感", "value": [5, 1072, 7532], "itemStyle": {"color": "#f5854a"}}, {"name": "骄傲", "value": [4, 707, 35154], "itemStyle": {"color": "#f5854a"}}, {"name": "信念感", "value": [4, 2518, 40156], "itemStyle": {"color": "#f5854a"}}, {"name": "爱慕感", "value": [4, 1487, 5948], "itemStyle": {"color": "#f5854a"}}, {"name": "被支持感", "value": [4, 678, 2713], "itemStyle": {"color": "#f5854a"}}, {"name": "放松感", "value": [3, 609, 1827], "itemStyle": {"color": "#f5854a"}}, {"name": "安定感", "value": [3, 174, 899], "itemStyle": {"color": "#f5854a"}}, {"name": "庆幸感", "value": [3, 93, 388], "itemStyle": {"color": "#f5854a"}}, {"name": "感动", "value": [2, 6498, 13066], "itemStyle": {"color": "#f5854a"}}, {"name": "自信", "value": [2, 555, 2719], "itemStyle": {"color": "#f5854a"}}, {"name": "狂喜", "value": [2, 1461, 2922], "itemStyle": {"color": "#f5854a"}}, {"name": "羡慕感", "value": [2, 154, 446], "itemStyle": {"color": "#f5854a"}}, {"name": "纠结感", "value": [179, 1428, 476509], "itemStyle": {"color": "#e86550"}}, {"name": "担心感", "value": [72, 1852, 180031], "itemStyle": {"color": "#e86550"}}, {"name": "急迫感", "value": [38, 1425, 59882], "itemStyle": {"color": "#e86550"}}, {"name": "遗憾", "value": [31, 3173, 115084], "itemStyle": {"color": "#e86550"}}, {"name": "失望", "value": [29, 1673, 67412], "itemStyle": {"color": "#e86550"}}, {"name": "无奈", "value": [28, 1303, 64172], "itemStyle": {"color": "#e86550"}}, {"name": "反感", "value": [20, 2351, 70645], "itemStyle": {"color": "#e86550"}}, {"name": "困惑感", "value": [16, 682, 21448], "itemStyle": {"color": "#e86550"}}, {"name": "怀疑感", "value": [7, 948, 8818], "itemStyle": {"color": "#e86550"}}, {"name": "挫败感", "value": [6, 3418, 22162], "itemStyle": {"color": "#e86550"}}, {"name": "麻木", "value": [4, 251, 3814], "itemStyle": {"color": "#e86550"}}, {"name": "轻蔑感", "value": [3, 1811, 5434], "itemStyle": {"color": "#e86550"}}, {"name": "惋惜", "value": [2, 658, 3948], "itemStyle": {"color": "#e86550"}}, {"name": "讨厌", "value": [2, 460, 920], "itemStyle": {"color": "#e86550"}}, {"name": "探秘感", "value": [22, 1854, 46753], "itemStyle": {"color": "#8a8a8a"}}, {"name": "伤逝感", "value": [19, 586, 12839], "itemStyle": {"color": "#8a8a8a"}}, {"name": "优越感", "value": [13, 2592, 112480], "itemStyle": {"color": "#8a8a8a"}}, {"name": "吃惊", "value": [11, 789, 11936], "itemStyle": {"color": "#8a8a8a"}}, {"name": "震惊", "value": [10, 934, 10039], "itemStyle": {"color": "#8a8a8a"}}, {"name": "思念感", "value": [6, 1381, 8954], "itemStyle": {"color": "#8a8a8a"}}, {"name": "敬畏感", "value": [2, 314, 627], "itemStyle": {"color": "#8a8a8a"}}];
+  chart.setOption({title:{text:'情绪效率散点图（降权后）',left:'center',textStyle:{color:'#e8e6e3',fontSize:13,fontWeight:500}},tooltip:{formatter:p=>'<b>'+p.data.name+'</b><br>笔记: '+p.data.value[0]+' 篇<br>降权均阅读: '+p.data.value[1].toLocaleString()+'<br>总阅读: '+p.data.value[2].toLocaleString()},grid:{top:36,right:28,bottom:28,left:56},xAxis:{type:'log',name:'笔记数',nameTextStyle:{color:'#8a8a8a',fontSize:10},axisLabel:{color:'#8a8a8a',fontSize:10},splitLine:{lineStyle:{color:'#1c2128'}}},yAxis:{type:'log',name:'降权均阅读',nameTextStyle:{color:'#8a8a8a',fontSize:10},axisLabel:{color:'#8a8a8a',fontSize:10},splitLine:{lineStyle:{color:'#1c2128'}}},series:[{type:'scatter',data:allSub,symbolSize:d=>Math.max(8,Math.sqrt(d[2]/1000)),label:{show:true,hideOverlap:true,formatter:p=>KEY.includes(p.data.name)?p.data.name:'',position:'top',color:'#e8e6e3',fontSize:11,fontWeight:'bold'}}]});
+})();
+window.addEventListener('resize',()=>charts.forEach(c=>c&&c.resize()));
+</script>
+</body>
+</html>
